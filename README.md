@@ -22,7 +22,9 @@ EnVar contributes to this effort by bringing environmental health domain experti
 | [OHDSI GIS Working Group](https://ohdsi.github.io/GIS/) | OMOP schema extensions, Gaia toolchain, vocabulary development |
 | [NIEHS HEW Data Accelerator](https://www.niehs.nih.gov/research/programs/extreme-weather) | Program sponsor; GB-EDoH data standardization |
 | [ORNL C-HER](https://arxiv.org/abs/2511.03750) | Exposomic data resource; test datasets |
-| [AOU / CLAD](https://github.com/cladteam/CHEL) | All of Us environmental data integration |
+| [All of Us](https://allofus.nih.gov/) | Environmental data integration via CHEL |
+| [CLAD](https://github.com/cladteam) | Climate and Atmospheric Data team; All of Us environmental linkage |
+| [ESIP Geodata 4 Health](https://www.esipfed.org/collaboration-areas/geo-data-4-health/) | Geospatial data standards and community collaboration |
 | [CHORDS](https://www.niehs.nih.gov/research/programs/chords) | Climate and health data infrastructure |
 
 ## Team

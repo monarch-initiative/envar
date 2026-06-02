@@ -20,6 +20,5 @@ EnVar is led from [TISLab](https://tislab.org/) at UNC Chapel Hill, where Dr. Me
 - **Jay Greenfield** — CODATA
 - **Jim Phuong** — geolocation pipeline, CLAD, OHDSI GIS WG
 - **Tim Norris** — HIV & Climate Change, OHDSI GIS WG
-- **Tim Rossi** — indoor building health data, OHDSI GIS WG
 - **Charisse Madlock-Brown** — CLAD geospatial lead
 - **Sierra Moxon** — microschema, environmental CDEs for NEON/NMDC

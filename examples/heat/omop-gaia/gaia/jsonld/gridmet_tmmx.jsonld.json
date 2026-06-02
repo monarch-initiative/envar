@@ -1,0 +1,90 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "dct": "http://purl.org/dc/terms/",
+    "qudt": "http://qudt.org/schema/qudt/",
+    "unit": "http://qudt.org/vocab/unit/",
+    "xsd": "http://www.w3.org/2001/XMLSchema/"
+  },
+  "@type": "Dataset",
+  "@id": "http://thredds.northwestknowledge.net:8080/thredds/ncss/agg_met_tmmx_1979_CurrentYear_CONUS",
+  "name": "gridMET METDATA Daily Tmmx (EnVar heat scenario)",
+  "version": "current",
+  "datePublished": "2013-04-01",
+  "url": "https://www.climatologylab.org/gridmet.html",
+  "description": "gridMET / METDATA is a 4-km daily surface meteorological dataset covering the contiguous US from 1979 onward, produced by blending PRISM monthly normals with NLDAS-2 sub-daily reanalysis. This entry exposes the daily maximum 2-m air temperature variable (tmmx). Native units are Kelvin; values loaded here have already been converted to Celsius upstream in the Amadeus extractor (UCUM 'Cel').",
+  "creator": [
+    {"name": "University of Idaho Climatology Lab"},
+    {"name": "John T. Abatzoglou"}
+  ],
+  "provider": ["University of Idaho Climatology Lab"],
+  "license": "CC0-1.0",
+  "type": "point",
+  "spatialCoverage": [
+    {"@type": "Place", "name": "Contiguous United States"}
+  ],
+  "keywords": [
+    "temperature",
+    "daily maximum",
+    "4km grid",
+    "conus",
+    "extreme heat",
+    "gridMET",
+    "METDATA",
+    "PRISM",
+    "NLDAS-2"
+  ],
+  "measurementTechnique": [
+    {
+      "@type": "DefinedTerm",
+      "description": "statistical blend of PRISM monthly normals with NLDAS-2 sub-daily reanalysis",
+      "termCode": "raster"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "name": "tmmx",
+      "description": "Daily maximum 2m air temperature (Celsius, converted from Kelvin upstream in Amadeus)",
+      "propertyID": "http://vocab.nerc.ac.uk/standard_name/air_temperature/",
+      "qudt:dataType": "numeric",
+      "unitCode": "CEL",
+      "unitText": "deg C",
+      "minValue": -50,
+      "maxValue": 60,
+      "startDate": "07/15/22",
+      "endDate": "07/22/22"
+    }
+  ],
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "propertyID": "http://dbpedia.org/resource/Spatial_reference_system",
+      "value": "https://epsg.io/4326"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "envar:native_spatial_resolution_m",
+      "value": "4000"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "envar:exposure_model_type",
+      "value": "statistical_blend"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "envar:native_units_ucum",
+      "value": "K"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "envar:output_units_ucum",
+      "value": "Cel"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "envar:unit_conversion",
+      "value": "K - 273.15 = Cel"
+    }
+  ]
+}

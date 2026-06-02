@@ -11,7 +11,7 @@ EnVar contributes to this effort by bringing environmental health domain experti
 ## What We Contribute
 
 - **Landscape analysis** — surveying how environmental datasets are used in epidemiological research, what metadata is typically reported (or missing), and where gaps exist in current OMOP vocabulary coverage
-- **Environmental micro-schemas** — [LinkML](https://linkml.io/)-based metadata specifications that capture the full context of environmental variables (what was measured, how, where, when, and at what resolution), complementing the structural work in Gaia
+- **Environmental micro-schemas** — [LinkML](https://linkml.io/)-based metadata specifications that capture the full context of environmental variables (what was measured, how, where, when, and at what resolution), complementing the structural work in Gaia. The authoritative source for the EnVar micro-schemas lives in a dedicated repo at **`~/ws/projects/linkml-microschemas-envar/`** — see [Related repositories](#related-repositories) below.
 - **Vocabulary and metadata contributions** — working with the GIS WG to expand OMOP vocabulary coverage for environmental exposures and improve metadata standards for the [GAIA catalog](https://github.com/OHDSI/gaiaCatalog)
 - **Guidance for data producers** — helping geospatial tool developers produce OMOP-compatible environmental data outputs
 
@@ -31,6 +31,13 @@ EnVar contributes to this effort by bringing environmental health domain experti
 | [BioData Catalyst](https://biodatacatalyst.nhlbi.nih.gov/) | Geospatial data capacity for BDC; BDCHM data model |
 | [Microschema](https://github.com/linkml/microschema) | LinkML-based CDE specifications for environmental variables |
 | [Global Exposome Forum](https://humanexposomeproject.com/) | Exposomics community; ECTO and Monarch KG promotion |
+
+## Related repositories
+
+| Repo | Role |
+|------|------|
+| **`~/ws/projects/linkml-microschemas-envar/`** | **Authoritative source for the EnVar LinkML micro-schemas.** All schema drafts, slot additions, enum edits, structural revisions, and version bumps are made and documented there — not in this repo. This repo references and consumes the schemas; it does not own them. |
+| `~/ws/notes/niehs_standards/` | Internal working repo — strategy, surveys, draft scenarios, research notes (kept private). |
 
 ## Team
 

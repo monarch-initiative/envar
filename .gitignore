@@ -1,2 +1,6 @@
 site/
 .DS_Store
+.env
+examples/heat/degauss/_cache/
+examples/heat/degauss/_docker_workdir/
+CLAUDE.local.md

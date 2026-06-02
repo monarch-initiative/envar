@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gridDataset location="/thredds/ncss/agg_met_tmmx_1979_CurrentYear_CONUS.nc" path="path">
+  <axis name="day" shape="17318" type="double" axisType="Time">
+    <attribute name="description" value="days since 1900-01-01" />
+    <attribute name="units" value="days since 1900-01-01 00:00:00" />
+    <attribute name="long_name" value="time" />
+    <attribute name="standard_name" value="time" />
+    <attribute name="calendar" value="gregorian" />
+    <attribute name="_ChunkSizes" type="int" value="365" />
+    <attribute name="_CoordinateAxisType" value="Time" />
+    <values start="28854.0" increment="1.0" npts="17318" />
+  </axis>
+  <axis name="lat" shape="585" type="double" axisType="Lat">
+    <attribute name="units" value="degrees_north" />
+    <attribute name="description" value="latitude" />
+    <attribute name="long_name" value="latitude" />
+    <attribute name="standard_name" value="latitude" />
+    <attribute name="axis" value="Y" />
+    <attribute name="_ChunkSizes" type="int" value="585" />
+    <attribute name="_CoordinateAxisType" value="Lat" />
+    <values start="49.400000000000006" increment="-0.041666666666671404" npts="585" />
+  </axis>
+  <axis name="lon" shape="1386" type="double" axisType="Lon">
+    <attribute name="units" value="degrees_east" />
+    <attribute name="description" value="longitude" />
+    <attribute name="long_name" value="longitude" />
+    <attribute name="standard_name" value="longitude" />
+    <attribute name="axis" value="X" />
+    <attribute name="_ChunkSizes" type="int" value="1386" />
+    <attribute name="_CoordinateAxisType" value="Lon" />
+    <values start="-124.76666663333334" increment="0.041666666666671404" npts="1386" />
+  </axis>
+  <gridSet name="day lat lon">
+    <projectionBox>
+      <minx>-124.78749996666667</minx>
+      <maxx>-67.03749996666669</maxx>
+      <miny>25.04583333333333</miny>
+      <maxy>49.420833333333334</maxy>
+    </projectionBox>
+    <axisRef name="day" />
+    <axisRef name="lat" />
+    <axisRef name="lon" />
+    <grid name="daily_maximum_temperature" desc="tmmx" shape="day lat lon" type="short">
+      <attribute name="_FillValue" type="short" value="32767" isUnsigned="true" />
+      <attribute name="units" value="K" />
+      <attribute name="description" value="Daily Maximum Temperature (2m)" />
+      <attribute name="long_name" value="tmmx" />
+      <attribute name="standard_name" value="tmmx" />
+      <attribute name="missing_value" type="short" value="32767" isUnsigned="true" />
+      <attribute name="dimensions" value="lon lat time" />
+      <attribute name="grid_mapping" value="crs" />
+      <attribute name="coordinate_system" value="WGS84,EPSG:4326" />
+      <attribute name="scale_factor" type="double" value="0.1" />
+      <attribute name="add_offset" type="double" value="220.0" />
+      <attribute name="coordinates" value="lat lon day" />
+      <attribute name="_Unsigned" value="true" />
+      <attribute name="_ChunkSizes" type="int" value="61 98 231" />
+    </grid>
+  </gridSet>
+  <LatLonBox>
+    <west>-124.7666</west>
+    <east>-67.0583</east>
+    <south>25.0666</south>
+    <north>49.4000</north>
+  </LatLonBox>
+  <TimeSpan>
+    <begin>1979-01-01T00:00:00Z</begin>
+    <end>2026-05-31T00:00:00Z</end>
+  </TimeSpan>
+  <AcceptList>
+    <GridAsPoint>
+      <accept displayName="xml">xml</accept>
+      <accept displayName="xml (file)">xml_file</accept>
+      <accept displayName="csv">csv</accept>
+      <accept displayName="csv (file)">csv_file</accept>
+      <accept displayName="geocsv">geocsv</accept>
+      <accept displayName="geocsv (file)">geocsv_file</accept>
+      <accept displayName="netcdf">netcdf</accept>
+      <accept displayName="netcdf4">netcdf4</accept>
+    </GridAsPoint>
+    <Grid>
+      <accept displayName="netcdf">netcdf</accept>
+      <accept displayName="netcdf4">netcdf4</accept>
+    </Grid>
+  </AcceptList>
+</gridDataset>

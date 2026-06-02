@@ -1,0 +1,62 @@
+# EnVar heat scenario — end-to-end example
+#
+# Same raw input (data/patients_example1.json), three systems, three outputs.
+# All Python is run via `uv` with PEP 723 inline metadata, so each script
+# declares its own dependencies and the example needs no project-wide install.
+
+set dotenv-load := true
+set dotenv-path := "../../.env"
+
+default:
+    @just --list
+
+# Print loaded creds (used to verify dotenv loading from ../../.env)
+_envcheck:
+    @echo "DAYMET_USERNAME=[$DAYMET_USERNAME] pwlen=${#DAYMET_PASSWORD}"
+
+# ---------------------------------------------------------- shared inputs
+
+INPUT := "data/patients_example1.json"
+
+# Show the canonical patient record that every system consumes.
+show-input:
+    @cat {{INPUT}} | python3 -m json.tool
+
+# ---------------------------------------------------------- per-system
+
+# Translate the canonical patient record into DeGAUSS's expected input CSV,
+# then run the DeGAUSS pipeline (geocoder + daymet) and emit an EnVar sidecar.
+degauss:
+    cd degauss && uv run --script translate.py ../{{INPUT}}
+    cd degauss && uv run --script run.py
+
+# Translate the canonical patient record into Amadeus's expected sf-like input,
+# then call GridMET via the Northwest Knowledge Network THREDDS service.
+amadeus:
+    cd amadeus && uv run --script translate.py ../{{INPUT}}
+    cd amadeus && uv run --script run.py
+
+# Run omop-gaia as an isolated end-to-end pipeline: geocode via the DeGAUSS
+# container, extract Daymet via the ORNL single-pixel API, then load and
+# spatial-join inside the real OHDSI gaia-db PostGIS container.
+omop:
+    cd omop-gaia && uv run --script run.py ../{{INPUT}}
+
+# ---------------------------------------------------------- end to end
+
+# Run all three. All three are independent; each takes the same canonical
+# input and owns its own provenance.
+all: degauss amadeus omop verify
+
+# Compare the per-patient-day Tmax values produced by Daymet vs GridMET.
+verify:
+    uv run --script scripts/verify.py
+
+# Wipe every system's outputs (keeps the data/ inputs).
+clean:
+    rm -rf amadeus/outputs/* degauss/outputs/* omop-gaia/outputs/*
+    @echo "outputs cleaned"
+
+# Show a tree view of what got produced.
+tree:
+    @find . -type f -not -path '*/\.*' | sort

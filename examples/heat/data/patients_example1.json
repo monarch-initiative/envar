@@ -1,0 +1,89 @@
+{
+  "schema_version": "0.1",
+  "description": "Canonical patient cohort for the EnVar heat scenario end-to-end example. Three patients in southern Arizona, 8-day demo window during the July 2022 heatwave. The full document story uses a wider 2018-2022 window; we narrow here so the example runs in a couple of minutes against the real Daymet and GridMET services.",
+  "study_window": {
+    "start": "2022-07-15",
+    "end": "2022-07-22",
+    "note": "Brackets the Phoenix mid-July 2022 heatwave; person 91204 on 2022-07-19 is the running example used throughout the slides and document."
+  },
+  "patients": [
+    {
+      "person_id": 91204,
+      "sex": "F",
+      "year_of_birth": 1955,
+      "address": {
+        "street": "100 W Washington St",
+        "city": "Phoenix",
+        "state": "AZ",
+        "zip": "85003",
+        "country": "US",
+        "geocoder_input": "100 W Washington St 85003"
+      },
+      "geocoded": {
+        "lat": 33.4485,
+        "lon": -112.0738,
+        "precision": "range",
+        "score": 0.95,
+        "geocode_result": "success",
+        "datum": "WGS84",
+        "epsg": 4326
+      },
+      "observation_period": {
+        "start": "2018-05-01",
+        "end": "2022-09-30"
+      }
+    },
+    {
+      "person_id": 91205,
+      "sex": "M",
+      "year_of_birth": 1950,
+      "address": {
+        "street": "1200 N Central Ave",
+        "city": "Phoenix",
+        "state": "AZ",
+        "zip": "85004",
+        "country": "US",
+        "geocoder_input": "1200 N Central Ave 85004"
+      },
+      "geocoded": {
+        "lat": 33.4738,
+        "lon": -112.0742,
+        "precision": "range",
+        "score": 0.92,
+        "geocode_result": "success",
+        "datum": "WGS84",
+        "epsg": 4326
+      },
+      "observation_period": {
+        "start": "2018-05-01",
+        "end": "2022-09-30"
+      }
+    },
+    {
+      "person_id": 91206,
+      "sex": "F",
+      "year_of_birth": 1964,
+      "address": {
+        "street": "450 S 6th Ave",
+        "city": "Tucson",
+        "state": "AZ",
+        "zip": "85701",
+        "country": "US",
+        "geocoder_input": "450 S 6th Ave 85701"
+      },
+      "geocoded": {
+        "lat": 32.2226,
+        "lon": -110.9747,
+        "precision": "range",
+        "score": 0.94,
+        "geocode_result": "success",
+        "datum": "WGS84",
+        "epsg": 4326
+      },
+      "observation_period": {
+        "start": "2020-01-15",
+        "end": "2022-09-30"
+      }
+    }
+  ]
+}

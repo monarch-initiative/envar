@@ -1,0 +1,74 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "dct": "http://purl.org/dc/terms/",
+    "qudt": "http://qudt.org/schema/qudt/",
+    "unit": "http://qudt.org/vocab/unit/",
+    "xsd": "http://www.w3.org/2001/XMLSchema/"
+  },
+  "@type": "Dataset",
+  "@id": "https://daymet.ornl.gov/single-pixel/daymet_v4_r1_tmax",
+  "name": "Daymet V4 R1 Daily Tmax (EnVar heat scenario)",
+  "version": "V4 R1",
+  "datePublished": "2022-09-15",
+  "dateModified": "2022-09-15",
+  "url": "https://daymet.ornl.gov/single-pixel/",
+  "description": "Daymet provides long-term, continuous, gridded estimates of daily weather variables (1 km, North America). This entry exposes the daily maximum 2-m air temperature variable (tmax), spatially interpolated from GHCN-Daily station observations. Loaded into the EnVar heat scenario at point geometries corresponding to the patient cohort's residence coordinates.",
+  "creator": [
+    {"name": "Oak Ridge National Laboratory Distributed Active Archive Center"},
+    {"name": "NASA"}
+  ],
+  "provider": ["NASA ORNL DAAC"],
+  "license": "public-domain-us-gov",
+  "type": "point",
+  "spatialCoverage": [
+    {"@type": "Place", "name": "North America"}
+  ],
+  "keywords": [
+    "temperature",
+    "daily maximum",
+    "1km grid",
+    "north america",
+    "extreme heat",
+    "daymet",
+    "GHCN-Daily"
+  ],
+  "measurementTechnique": [
+    {
+      "@type": "DefinedTerm",
+      "description": "spatial interpolation from GHCN-Daily station observations",
+      "termCode": "raster"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "name": "tmax",
+      "description": "Daily maximum 2m air temperature",
+      "propertyID": "http://vocab.nerc.ac.uk/standard_name/air_temperature/",
+      "qudt:dataType": "numeric",
+      "unitCode": "CEL",
+      "unitText": "deg C",
+      "minValue": -50,
+      "maxValue": 60,
+      "startDate": "07/15/22",
+      "endDate": "07/22/22"
+    }
+  ],
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "propertyID": "http://dbpedia.org/resource/Spatial_reference_system",
+      "value": "https://epsg.io/4326"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "envar:native_spatial_resolution_m",
+      "value": "1000"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "envar:exposure_model_type",
+      "value": "spatial_interpolation"
+    }
+  ]
+}

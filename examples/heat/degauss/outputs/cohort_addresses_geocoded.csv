@@ -1,0 +1,4 @@
+person_id,address,start_date,end_date,matched_street,matched_zip,matched_city,matched_state,lat,lon,score,precision,geocode_result
+91204,100 W Washington St 85003,2022-07-15,2022-07-22,W Washington St,85003,Phoenix,AZ,33.448248,-112.075101,0.818,range,geocoded
+91205,1200 N Central Ave 85004,2022-07-15,2022-07-22,N Central Ave,85004,Phoenix,AZ,33.460849,-112.073805,0.82,range,geocoded
+91206,450 S 6th Ave 85701,2022-07-15,2022-07-22,S 6th Ave,85701,Tucson,AZ,32.216591,-110.968636,0.74,range,geocoded

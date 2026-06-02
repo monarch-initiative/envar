@@ -1,0 +1,58 @@
+site_name: "EnVar: Environmental Variables for Health Outcomes"
+site_description: Supporting the integration of environmental exposure data into the OMOP Common Data Model
+site_url: https://monarch-initiative.github.io/EnVar/
+repo_url: https://github.com/monarch-initiative/EnVar
+repo_name: monarch-initiative/EnVar
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - toc.integrate
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+
+nav:
+  - Home: index.md
+  - Related Projects:
+      - Overview: projects/index.md
+      - HIV & Climate Change: projects/hiv-climate.md
+      - Geodata 4 Health (ESIP): projects/geodata4health.md
+      - CLAD: projects/clad.md
+      - Microschema: projects/microschema.md
+      - BioData Catalyst DMC: projects/bdc-dmc.md
+      - OHDSI GIS Working Group: projects/ohdsi-gis.md
+      - NIEHS Enviro CDE Project: projects/niehs-enviro-cde.md
+      - Global Exposome Forum: projects/global-exposome.md
+      - BioData Catalyst Data Portal: projects/bdc-portal.md
+  - Surveys:
+      - Overview: surveys/index.md
+      - Landscape Report: surveys/landscape.md
+      - Priority Variables: surveys/priority-variables.md
+      - Dataset Generators: surveys/dataset-generators.md
+  - Partners: partners.md
+  - Team: team.md

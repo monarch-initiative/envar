@@ -18,7 +18,4 @@ EnVar is led from [TISLab](https://tislab.org/) at UNC Chapel Hill, where Dr. Me
 - **Dr. Charles Schmitt** — NIEHS; co-chair of Geodata 4 Health
 - **Dr. Ann Liu** — NIEHS
 - **Jay Greenfield** — CODATA
-- **Jim Phuong** — geolocation pipeline, CLAD, OHDSI GIS WG
-- **Tim Norris** — HIV & Climate Change, OHDSI GIS WG
-- **Charisse Madlock-Brown** — CLAD geospatial lead
 - **Sierra Moxon** — microschema, environmental CDEs for NEON/NMDC

@@ -17,7 +17,7 @@ This report surveys standards, tools, and projects linking environmental and geo
 
 2. **Limited OMOP vocabulary coverage.** The Exposome Vocabulary has ~79,000 toxin-target relationships, but most environmental exposure variables used in studies (air pollutants, water contaminants, noise, greenspace, climate variables) lack OMOP concept IDs. This is the single biggest blocker.
 
-3. **Epic Healthy Planet captures SDoH but not environmental exposures.** Epic supports structured SDoH screening (PRAPARE, AHC-HRSN) at the point of care, mapping to OMOP's Observation table via LOINC. Environmental exposures have no clinical workflow equivalent -- they must always be linked post-hoc via geocoding.
+3. **Epic Healthy Planet captures SDoH but not environmental exposures.** Epic supports structured SDoH screening (PRAPARE, AHC-HRSN) at the point of care, encoded with LOINC; the values are subsequently mapped to OMOP's Observation table via downstream ETL. Environmental exposures have no clinical workflow equivalent -- they must always be linked post-hoc via geocoding.
 
 4. **The Monarch/EHS-Data-Standards ecosystem provides schema infrastructure.** `linkml-microschema-profile` defines a composable CDE pattern EnVar should adopt. `exposome-schema` provides reusable exposure concepts but lacks geospatial metadata. `soma` models lab-assay outcomes but not population-level geospatial exposures.
 
@@ -59,7 +59,7 @@ Four components: **gaiaDB** (PostGIS + OMOP integration), **gaiaCore** (R/Python
 |-----------|---------|
 | **OMOP GIS Vocabulary** | Geographic and geospatial concepts |
 | **OMOP Exposome Vocabulary** | ~79,000 toxin-target relationships (T3DB-sourced); thin on common epi variables |
-| **OMOP SDoH Vocabulary** | SVI, ADI, EJI, COI; ~8,000 concept associations; uses "Phenotypic Feature" domain |
+| **OMOP SDoH Vocabulary** | SVI, ADI, EJI, COI; 6,738 concept associations (per OHDSI GIS WG); uses "Phenotypic Feature" domain |
 
 **Critical gap:** Many commonly used environmental variables (PM2.5 at various aggregation levels, NO2, noise metrics, NDVI, heat indices) lack OMOP concept IDs.
 
@@ -119,12 +119,12 @@ The largest coordinated exposure assessment efforts globally, but none use OMOP:
 
 | Project | Scale | Focus |
 |---------|-------|-------|
-| **EHEN** | 9 sub-projects, 126 partners, 24 countries | Air pollution, noise, greenspace, chemicals |
-| **EXPANSE** | Urban settings | LUR models becoming de facto standards |
-| **ATHLETE** | 18 birth cohorts | Multi-omics + external exposome |
+| **EHEN** | 9 sub-projects, 126 research groups, 24 countries; €100M+ (Horizon 2020) | Air pollution, noise, greenspace, chemicals. Sub-projects include EXPANSE, ATHLETE, EPHOR, EQUAL-LIFE, EXIMIOUS, HEDIMED, HEAP, LongITools, REMEDIA. |
+| **EXPANSE** (EHEN sub-project) | Urban settings | LUR models becoming de facto standards |
+| **ATHLETE** (EHEN sub-project) | 18 birth cohorts | Multi-omics + external exposome |
 | **HELIX** | 32K mother-child pairs (exposure modeling); 1.2K subset (biomarkers) | 200+ exposures; rexposome R package |
 | **HBM4EU** | 28 countries; ended June 2022 | Chemical biomonitoring (EUR 74M) |
-| **PARC** | 28 countries; 2022–2029 | Chemical risk assessment (EUR 400M) |
+| **PARC** | ~200 partners across 28 countries; 2022–2029; EUR 400M (50% EU / 50% Member States co-funded) | Chemical risk assessment |
 | **UK Biobank** | 500K participants | Geocoded environmental linkages via NHS-linked addresses (addresses not released to researchers) |
 
 ---
@@ -132,7 +132,7 @@ The largest coordinated exposure assessment efforts globally, but none use OMOP:
 ## Clinical Data Integration
 
 - **All of Us / CLAD / CHEL** -- CHEL annotates participants with H3 hex IDs and provides geospatial datasets. Jim Phuong's geocoding pipeline inspired the Geodata 4 Health collaboration.
-- **FHIR PIT** (UNC Chapel Hill) -- Integrates EHR data (FHIR format) with EPA CMAQ, roadway, and Census ACS data. Validated on ~160K asthma patients. Feeds into **ICEES** (NCATS Biomedical Data Translator).
+- **FHIR PIT** (UNC Chapel Hill) -- Integrates EHR data (FHIR format) with EPA CMAQ, roadway, and Census ACS data. Validated on ~160K patients with asthma or related pulmonary conditions (Xu et al. 2022, PMC9015759). Feeds into **ICEES** (NCATS Biomedical Data Translator).
 
 ---
 
@@ -151,10 +151,10 @@ The largest coordinated exposure assessment efforts globally, but none use OMOP:
 
 ### Cross-Cutting Methodological Challenges
 
-- **Spatial misalignment:** Goldman et al. found 43--68% reduction in risk ratio estimates for primary pollutants
-- **MAUP:** NO2-COVID-19 associations changed from positive to negative to null depending on aggregation strategy
-- **Geocoding error:** 74.4% urban vs 10.5% rural address-level precision
-- **Residential mobility:** 55% of Texas children with leukemia moved between birth and diagnosis
+- **Spatial misalignment:** 43--68% reduction in risk ratio estimates for primary pollutants (Goldman et al. 2010, Atlanta time-series, *Environ Sci Technol*; PMC2948846)
+- **MAUP:** NO2-COVID-19 associations changed from positive to negative to null depending on aggregation strategy [VERIFY CLAIM]
+- **Geocoding error:** 74.4% urban vs 10.5% rural address-level precision (Goin et al. 2017, French E3N cohort, *Environ Health*; PMC5324215)
+- **Residential mobility:** 55% of Texas children with leukemia moved between birth and diagnosis (Janitz et al. 2019, *J Expo Sci Environ Epidemiol*; PMC11465071)
 
 ---
 

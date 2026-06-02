@@ -31,7 +31,7 @@ The core problem is not poor documentation -- NASA and NOAA have among the most 
 
 **Produces:** Gridded satellite-derived products -- AOD (1 km), NDVI/EVI (250 m), nighttime lights (500 m), PM2.5 surfaces.
 
-**Metadata system:** The most comprehensive in environmental science. The **Unified Metadata Model (UMM)** defines profiles for collections (UMM-C), granules (UMM-G), services (UMM-S), and variables (UMM-Var), all searchable via the **Common Metadata Repository (CMR)**. UMM-C captures 100+ fields per collection.
+**Metadata system:** The most comprehensive in environmental science. The **Unified Metadata Model (UMM)** defines profiles for collections (UMM-C), granules (UMM-G), services (UMM-S), and variables (UMM-Var), all searchable via the **Common Metadata Repository (CMR)**. UMM-C captures 100+ fields per collection [VERIFY CLAIM].
 
 **Not documented for OMOP:** No concept_id mapping; no spatial assignment guidance (how gridded values become person-level exposure); no temporal alignment semantics; no UCUM unit mapping.
 
@@ -41,11 +41,11 @@ The core problem is not poor documentation -- NASA and NOAA have among the most 
 
 **Metadata system:** ISO 19115/19115-2 mandatory for NCEI-archived data. CF Conventions required for NetCDF (4,500+ standard names with canonical units). CF `cell_methods` partially addresses temporal aggregation.
 
-**Not documented for OMOP:** No concept crosswalk; no population-weighted spatial aggregation guidance; no temporal alignment for health events; NLDAS-2 coastal bias (-1.48C for Tmax) and heat index validity threshold (>80F only) not flagged for health consumers.
+**Not documented for OMOP:** No concept crosswalk; no population-weighted spatial aggregation guidance; no temporal alignment for health events; NLDAS-2 coastal bias (-1.48C for Tmax [VERIFY CLAIM]) and heat index validity threshold (>80F only) not flagged for health consumers.
 
 ### EPA (AQS, CMAQ, AirToxScreen, TRI, WQP)
 
-**Produces:** Monitor data (5,000+ AQS monitors), air quality models (CMAQ at 12/4/1 km), risk assessments (AirToxScreen at census tract), water quality (WQP: 430M+ results).
+**Produces:** Monitor data (~5,000 active AQS monitors; >10,000 total in the database), air quality models (CMAQ at 12/4/1 km), risk assessments (AirToxScreen at census tract for 2017–2019; census block for 2020+), water quality (WQP: 430M+ results).
 
 **Metadata system:** AQS uses the Environmental Sampling and Results (ESAR) standard. CMAQ output uses I/O API NetCDF. Parameter codes are EPA-specific (e.g., 88101 = PM2.5 Local Conditions, NAAQS-eligible FRM/FEM data).
 
@@ -79,7 +79,7 @@ CF `cell_methods` partially addresses this, but health research requires documen
 Known day-definition pitfalls:
 
 - **PRISM:** 24h ending 12:00 GMT (7 AM EST) -- reported Tmax likely occurred on previous local calendar day
-- **Daymet:** Local midnight convention
+- **Daymet:** 24h preceding UTC midnight
 - **NLDAS-2:** Hourly UTC
 - **CMAQ:** Hourly UTC
 

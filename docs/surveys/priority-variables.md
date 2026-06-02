@@ -13,7 +13,7 @@ This survey specifies **38 environmental variables** across five NIEHS priority 
 
 Variables were ranked using a five-criterion framework: epidemiological evidence strength (P-ExWAS replication, GBD burden), NIEHS/HEW alignment, data availability, OMOP readiness, and community demand across 50+ surveyed projects. The result: **14 Tier 1** (immediate standardization), **14 Tier 2** (next phase), **10 Tier 3** (future development).
 
-**The most critical finding: 30 of 38 variables lack OMOP concept IDs.** Only 8 have existing or near-ready concepts. The vocabulary gap -- not data availability or schema design -- is the primary blocker.
+**The most critical finding: 27 of 38 variables lack OMOP concept IDs.** Only 11 have existing or near-ready concepts. The vocabulary gap -- not data availability or schema design -- is the primary blocker.
 
 ---
 
@@ -33,7 +33,7 @@ The most mature domain. Multiple validated exposure surfaces, strong causal evid
 
 ### Water Contaminants
 
-PFAS, arsenic, nitrate, lead, disinfection byproducts. NIEHS designated PFAS as top priority; EPA announced first enforceable PFAS limits in April 2024. Key challenge: SDWIS reports violations (binary), not concentrations; service-area boundaries were historically a major gap, partially closed by EPA's October 2024 national CWS service-area boundaries release covering ~99% of CWS-served population, but residual gaps remain for small systems; private wells (~15% of households) are unmonitored.
+PFAS, arsenic, nitrate, lead, disinfection byproducts. NIEHS designated PFAS as top priority; EPA announced first enforceable PFAS limits in April 2024. Key challenge: SDWIS reports violations (binary), not concentrations; service-area boundaries were historically a major gap, partially closed by EPA's July 2024 national CWS service-area boundaries release (documentation/standard followed in October 2024) covering ~99% of CWS-served population, but residual gaps remain for small systems; private wells (~15% of households) are unmonitored.
 
 ### Socio-Economic / Environmental Justice
 
@@ -55,8 +55,8 @@ Area-level indices (SVI, ADI, EJScreen, CalEnviroScreen) used as exposures and e
 | WBGT | Heat | 4 km | Daily | gridMET-derived | Missing | **1** |
 | UTCI | Heat | 31 km | Hourly | ERA5-HEAT | Missing | **1** |
 | Heat Index | Heat | 12 km | Daily | NLDAS-2 / CDC WONDER (NLDAS heat-index covers 1979–2011) | Proposed (partial) | **1** |
-| PFOA | Water | Water system | Quarterly | SDWIS / UCMR 5 | Missing | **1** |
-| PFOS | Water | Water system | Quarterly | SDWIS / UCMR 5 | Missing | **1** |
+| PFOA | Water | Water system | Quarterly (surface) / semi-annual (groundwater) | SDWIS / UCMR 5 | Missing | **1** |
+| PFOS | Water | Water system | Quarterly (surface) / semi-annual (groundwater) | SDWIS / UCMR 5 | Missing | **1** |
 | SVI | EJ/SES | Census tract | Biennial | CDC/ATSDR | Exists | **1** |
 | ADI | EJ/SES | Block group | Annual | UW Neighborhood Atlas | Exists | **1** |
 | SO2 | Air quality | Block group | Annual | CACES | Missing | **2** |
@@ -68,10 +68,10 @@ Area-level indices (SVI, ADI, EJScreen, CalEnviroScreen) used as exposures and e
 | Apparent temperature | Heat | 31 km | Hourly | ERA5 | Missing | **2** |
 | Consecutive heat days | Heat | County/Tract | Event | Derived from PRISM | Missing | **2** |
 | Nighttime Tmin | Heat | 4 km | Daily | PRISM / Daymet | Missing | **2** |
-| PFAS mixture (HI) | Water | Water system | Quarterly | SDWIS | Missing | **2** |
+| PFAS mixture (HI) | Water | Water system | Quarterly (surface) / semi-annual (groundwater) | SDWIS | Missing | **2** |
 | Nitrate | Water | Water system | Event-based | USGS NWIS / SDWIS | Missing | **2** |
 | Arsenic | Water | Water system | Event-based | USGS NWIS / SDWIS | Proposed (partial) | **2** |
-| EJScreen indices | EJ/SES | Block group | Annual | EPA (archived) | Proposed | **2** |
+| EJScreen indices | EJ/SES | Block group | Annual | EPA (removed Feb 2025; mirrors only) | Proposed | **2** |
 | EJI | EJ/SES | Census tract | Periodic | CDC/ATSDR | Proposed | **2** |
 | CO | Air quality | Block group | Annual | CACES | Missing | **3** |
 | Fire Radiative Power | Wildfire | 375 m | Overpass | NASA FIRMS | Missing | **3** |
@@ -92,14 +92,14 @@ Area-level indices (SVI, ADI, EJScreen, CalEnviroScreen) used as exposures and e
 
 | Variable | Gap | Impact |
 |----------|-----|--------|
-| Indoor wildfire PM2.5 | No national indoor product; 40--65% of smoke exposure occurs indoors | High |
+| Indoor wildfire PM2.5 | No national indoor product; 40--65% of smoke exposure occurs indoors [VERIFY CLAIM] | High |
 | PFAS in private wells | ~15% of US households unmonitored | High |
 | UHI effect | No standardized national product | Medium |
 | Wildfire PM2.5 composition | Requires CTM simulation; no pre-computed product | Medium |
 
 ### OMOP Vocabulary Gap
 
-Of 38 variables, **30 lack OMOP concept IDs**. The 8 with existing or near-ready concepts: SVI, ADI, poverty rate (SDoH vocabulary); PM2.5, O3 (proposed in exposome vocabulary); arsenic, lead, heat index (partial via SNOMED/LOINC clinical measurement codes -- not environmental exposure concepts).
+Of 38 variables, **27 lack OMOP concept IDs**. The 11 with existing or near-ready concepts: SVI, ADI (existing in SDoH vocabulary); PM2.5 (annual), PM2.5 (daily), O3 (seasonal), EJScreen indices, EJI (proposed in exposome / SDoH vocabularies); Daily Tmax, Heat Index, Arsenic, Lead (partial via SNOMED/LOINC clinical measurement codes -- not environmental exposure concepts).
 
 Most critical Tier 1 gaps requiring new OMOP concept proposals:
 
@@ -113,10 +113,10 @@ Most critical Tier 1 gaps requiring new OMOP concept proposals:
 
 | Variable | Issue | Impact |
 |----------|-------|--------|
-| Water contaminants | Service-area boundaries partially closed by EPA Oct 2024 release; residual gaps for small systems | High |
+| Water contaminants | Service-area boundaries partially closed by EPA July 2024 release; residual gaps for small systems | High |
 | Smoke PM2.5 | 3+ competing methods with >50% estimate differences | High |
 | Heat metrics | 4+ competing indices, no consensus | Medium |
-| NDVI / greenspace | Buffer distance arbitrary; changes quintiles for 11--60% of participants | Medium |
+| NDVI / greenspace | Buffer distance arbitrary; changes quintiles for 11--60% of participants (PMC11649244) | Medium |
 
 ### Poor Metadata Reporting
 

@@ -1,0 +1,93 @@
+{
+  "provenance_id": "01KT4EDTA3GAXAG0DMRCHHGAJA-daymet",
+  "variable": {
+    "name": "tmax",
+    "cf_standard_name": "air_temperature",
+    "cf_cell_methods": "time: maximum",
+    "units_ucum": "Cel"
+  },
+  "spatial": {
+    "native_spatial_resolution_m": 1000,
+    "crs": "EPSG:4326",
+    "extraction_method": "inverse_distance_weighted_4_nearest_cells",
+    "target_geography_type": "point_residence"
+  },
+  "temporal": {
+    "temporal_resolution": "daily",
+    "temporal_aggregation_method": "maximum",
+    "day_boundary_convention": "local_midnight",
+    "calendar": "gregorian",
+    "extraction_window_start": "2022-07-15",
+    "extraction_window_end": "2022-07-22"
+  },
+  "source_dataset": {
+    "name": "Daymet V4 Daily Surface Weather Data",
+    "short_code": "daymet_v4",
+    "doi": "10.3334/ORNLDAAC/2129",
+    "version": "V4 R1",
+    "producer_institution": "NASA ORNL DAAC",
+    "license_spdx": "public-domain-us-gov",
+    "native_format": "NetCDF-4_CF",
+    "access_url": "https://daymet.ornl.gov/"
+  },
+  "exposure_model": {
+    "type": "spatial_interpolation",
+    "inputs": [
+      "GHCN-Daily station observations"
+    ]
+  },
+  "linkage": {
+    "strategy": "point_extraction_at_residence",
+    "geocoding_precision_propagated": "range",
+    "address_period_alignment": "address_history_from_emr"
+  },
+  "tool_run": {
+    "tool_name": "daymet",
+    "tool_version": "1.0.0",
+    "execution_mode": "real_container",
+    "cache_status": "hit",
+    "container_image_repository": "ghcr.io/degauss-org/daymet",
+    "container_image_tag": "1.0.0",
+    "container_image_digest": "sha256:bfe282259823b7fa92ea9b41e77b51defe455d704a8b6a142c0fe5f58c78cc72",
+    "run_timestamp_utc": "2026-06-02T15:14:54Z",
+    "native_output_file": "cohort_addresses_geocoded_daymet_1.0.0.csv",
+    "native_output_file_sha256": "5305a646aef23fb98e53d851852902a5059f94c6b06fde96c7e8f57f334db9e1",
+    "envar_aliased_output_file": "cohort_addresses_geocoded_daymet.csv",
+    "envar_aliased_output_file_sha256": "8093b669a977013b00541f7f2564bed826e4746520c3ff20267435259a3afcc9",
+    "input_file_sha256": "fa4b4684edaab06f452eb538108650744bd3b28aee28a37b1ac49fdad1488578",
+    "input_row_count": 3,
+    "output_row_count": 24
+  },
+  "provenance_chain": [
+    {
+      "provenance_id": "01KT4EDTA3FKXH9MMMM7D6B7GQ-geocoder",
+      "tool_run": {
+        "tool_name": "geocoder",
+        "tool_version": "3.3.0",
+        "execution_mode": "real_container",
+        "container_image_repository": "ghcr.io/degauss-org/geocoder",
+        "container_image_tag": "3.3.0",
+        "container_image_digest": "sha256:ec9b75eff7cd7432efcc84d3e7d55b593cc06e0cd2868b512dbc70ef99a1fdc6",
+        "run_timestamp_utc": "2026-06-02T15:14:54Z",
+        "native_output_file": "cohort_addresses_geocoder_3.3.0_score_threshold_0.5.csv",
+        "native_output_file_sha256": "fa4b4684edaab06f452eb538108650744bd3b28aee28a37b1ac49fdad1488578",
+        "envar_aliased_output_file": "cohort_addresses_geocoded.csv",
+        "envar_aliased_output_file_sha256": "3a4ec454a15a88ec654a888ea7266f365768994bca2f06e562cbface2ceb5ba7",
+        "input_file_sha256": "b285ec7e176006b0d6f107378099ef8be707b249b56753faa35e92d82bdb6e99",
+        "input_row_count": 3,
+        "output_row_count": 3
+      },
+      "source_dataset": {
+        "name": "DeGAUSS geocoder reference data (US Census TIGER/Line + ZCTA)",
+        "short_code": "degauss_geocoder",
+        "version": "3.3.0",
+        "producer_institution": "Cincinnati Children's Hospital Medical Center (DeGAUSS); reference data: U.S. Census Bureau",
+        "license_spdx": "public-domain-us-gov",
+        "access_url": "https://degauss.org/geocoder/"
+      },
+      "linkage": {
+        "strategy": "address_to_point_geocode"
+      }
+    }
+  ]
+}

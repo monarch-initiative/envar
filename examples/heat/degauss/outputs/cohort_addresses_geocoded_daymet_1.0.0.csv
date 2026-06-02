@@ -1,0 +1,25 @@
+id,address,matched_street,matched_zip,matched_city,matched_state,score,precision,geocode_result,date,tmax
+91204,100 W Washington St 85003,W Washington St,85003,Phoenix,AZ,0.818,range,geocoded,2022-07-15,44.61
+91204,100 W Washington St 85003,W Washington St,85003,Phoenix,AZ,0.818,range,geocoded,2022-07-16,45.6
+91204,100 W Washington St 85003,W Washington St,85003,Phoenix,AZ,0.818,range,geocoded,2022-07-17,44.08
+91204,100 W Washington St 85003,W Washington St,85003,Phoenix,AZ,0.818,range,geocoded,2022-07-18,42.43
+91204,100 W Washington St 85003,W Washington St,85003,Phoenix,AZ,0.818,range,geocoded,2022-07-19,43.93
+91204,100 W Washington St 85003,W Washington St,85003,Phoenix,AZ,0.818,range,geocoded,2022-07-20,43.76
+91204,100 W Washington St 85003,W Washington St,85003,Phoenix,AZ,0.818,range,geocoded,2022-07-21,43.36
+91204,100 W Washington St 85003,W Washington St,85003,Phoenix,AZ,0.818,range,geocoded,2022-07-22,45.08
+91205,1200 N Central Ave 85004,N Central Ave,85004,Phoenix,AZ,0.82,range,geocoded,2022-07-15,44.61
+91205,1200 N Central Ave 85004,N Central Ave,85004,Phoenix,AZ,0.82,range,geocoded,2022-07-16,45.61
+91205,1200 N Central Ave 85004,N Central Ave,85004,Phoenix,AZ,0.82,range,geocoded,2022-07-17,44.08
+91205,1200 N Central Ave 85004,N Central Ave,85004,Phoenix,AZ,0.82,range,geocoded,2022-07-18,42.41
+91205,1200 N Central Ave 85004,N Central Ave,85004,Phoenix,AZ,0.82,range,geocoded,2022-07-19,43.95
+91205,1200 N Central Ave 85004,N Central Ave,85004,Phoenix,AZ,0.82,range,geocoded,2022-07-20,43.77
+91205,1200 N Central Ave 85004,N Central Ave,85004,Phoenix,AZ,0.82,range,geocoded,2022-07-21,43.36
+91205,1200 N Central Ave 85004,N Central Ave,85004,Phoenix,AZ,0.82,range,geocoded,2022-07-22,45.08
+91206,450 S 6th Ave 85701,S 6th Ave,85701,Tucson,AZ,0.74,range,geocoded,2022-07-15,42.89
+91206,450 S 6th Ave 85701,S 6th Ave,85701,Tucson,AZ,0.74,range,geocoded,2022-07-16,42
+91206,450 S 6th Ave 85701,S 6th Ave,85701,Tucson,AZ,0.74,range,geocoded,2022-07-17,41.43
+91206,450 S 6th Ave 85701,S 6th Ave,85701,Tucson,AZ,0.74,range,geocoded,2022-07-18,40.72
+91206,450 S 6th Ave 85701,S 6th Ave,85701,Tucson,AZ,0.74,range,geocoded,2022-07-19,40.93
+91206,450 S 6th Ave 85701,S 6th Ave,85701,Tucson,AZ,0.74,range,geocoded,2022-07-20,40.69
+91206,450 S 6th Ave 85701,S 6th Ave,85701,Tucson,AZ,0.74,range,geocoded,2022-07-21,41.24
+91206,450 S 6th Ave 85701,S 6th Ave,85701,Tucson,AZ,0.74,range,geocoded,2022-07-22,42.04

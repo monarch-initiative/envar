@@ -46,8 +46,7 @@ nav:
       - Microschema: projects/microschema.md
       - BioData Catalyst DMC: projects/bdc-dmc.md
       - OHDSI GIS Working Group: projects/ohdsi-gis.md
-      - NIEHS Enviro CDE Project: projects/niehs-enviro-cde.md
-      - Global Exposome Forum: projects/global-exposome.md
+      - EnVar: projects/envar.md
       - BioData Catalyst Data Portal: projects/bdc-portal.md
   - Surveys:
       - Overview: surveys/index.md

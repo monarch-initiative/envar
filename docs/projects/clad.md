@@ -2,7 +2,7 @@
 
 ## Goal
 
-Provide data linkages for the [All of Us](https://allofus.nih.gov/) program. The [Center for Linkage and Acquisition of Data (CLAD)](https://allofus.nih.gov/article/center-for-linkage-and-aquisition-of-data) produced the CHEL (Climate & Health Exposure Layer) dataset that links All of Us participants to several geospatial datasets according to AoU program requests.
+Provide data linkages for the [All of Us](https://allofus.nih.gov/) program. The [Center for Linkage and Acquisition of Data (CLAD)](https://allofus.nih.gov/article/center-for-linkage-and-aquisition-of-data) produced the CHEL (CLAD Hexagonal Environmental Linkage) dataset that links All of Us participants to several geospatial datasets according to AoU program requests.
 
 ## Key Outputs
 

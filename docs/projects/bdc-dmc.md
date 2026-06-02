@@ -6,13 +6,13 @@ Create capacity for using geospatial data in [BioData Catalyst](https://biodatac
 
 ## Status
 
-Active. For the upcoming 5-year plan, the team is working through milestones for geospatial data integration. Plans include engaging [CLAD](clad.md) to do similar work on geolocation and linking.
+Active. The current DMC award (OT2HL167310) ends August 2026; for the planned renewal, the team is working through milestones for geospatial data integration. Plans include engaging [CLAD](clad.md) to do similar work on geolocation and linking.
 
 Anne and Charles Schmitt have been discussing BDC's use of NIEHS data products, tools, and services, and have engaged the BDC Program Officer about a specific use case with BDC using NIEHS data — a meeting to discuss this is planned.
 
 ## Key Details
 
-- BDC uses a LinkML data model, **BDCHM**
+- The DMC produces **BDCHM** (BioData Catalyst Harmonized Model), a LinkML-based harmonized data model used for ingest
 - Geospatial integration will leverage approaches proven in [CLAD](clad.md) and informed by [Geodata 4 Health](geodata4health.md) standards work
 
 ## Connections

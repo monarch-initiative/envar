@@ -2,7 +2,7 @@
 
 ## Goal
 
-Develop and maintain the geospatial infrastructure for OMOP, including the [Gaia catalog](https://github.com/OHDSI/gaiaCatalog) and the OMOP external exposure table.
+Develop and maintain the geospatial infrastructure for OMOP, including [gaiaCatalog](https://github.com/OHDSI/gaiaCatalog) and the OMOP `external_exposure` table.
 
 **Website:** [ohdsi.github.io/GIS](https://ohdsi.github.io/GIS/)
 

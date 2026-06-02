@@ -13,7 +13,7 @@
 | [ESIP Geodata 4 Health](https://www.esipfed.org/collaboration-areas/geo-data-4-health/) | Geospatial data standards and community collaboration |
 | [CHORDS](https://www.niehs.nih.gov/research/programs/chords) | Climate and health data infrastructure |
 | [CODATA](https://codata.org/) | Data standards expertise (via Jay Greenfield) |
-| [GA4GH](https://www.ga4gh.org/) | Human Exposome Data Standards Study Group; Super Spreadsheet minimum-metadata schema |
+| [GA4GH](https://www.ga4gh.org/) | Human Exposome Data Standards Study Group |
 | [African Population and Health Research Center](https://aphrc.org/) | HIV & climate change study site partners (Kenya) |
 | [BioData Catalyst](https://biodatacatalyst.nhlbi.nih.gov/) | Geospatial data capacity for BDC; BDCHM data model |
 | [Microschema](https://github.com/linkml/linkml-microschema-profile) | LinkML-based CDE specifications for environmental variables |

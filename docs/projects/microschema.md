@@ -2,7 +2,7 @@
 
 ## Goal
 
-Create [LinkML](https://linkml.io/) schemas for NIH CDEs. Most NIH CDEs are under-specified from a technical perspective. Microschema provides a formal, machine-readable specification that captures the full context of a CDE.
+Create [LinkML](https://linkml.io/) schemas for NIH CDEs. Microschema provides a formal, machine-readable specification that captures the full context of a CDE.
 
 ## Repositories
 
@@ -18,7 +18,7 @@ Recently started. Microschema makes use of LinkML rules and expressions that hav
 - **Anne Thessen** — lead
 - **Madan Krishnamurthy**
 - **Justin Reese**
-- **Sierra Moxon** — may be making environmental CDEs using microschemas for NEON and NMDC
+- **Sierra Moxon**
 - **Harry Caufield**
 
 Work happens during the weekly A&A meetings.

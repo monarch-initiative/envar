@@ -2,7 +2,7 @@
 
 ## Goal
 
-Exercise the OHDSI geospatial data pipeline by investigating the impact of climate change on HIV diagnosis and death in Tanzania and Kenya. The primary objective is not novel findings, but to exercise the [Gaia Catalog](https://github.com/OHDSI/gaiaCatalog) and the OMOP external exposures table and help concretize these resources for use in data pipelines.
+Exercise the OHDSI geospatial data pipeline by investigating the impact of climate change on HIV diagnosis and death in Tanzania and Kenya. The primary objective is not novel findings, but to exercise [gaiaCatalog](https://github.com/OHDSI/gaiaCatalog) and the OMOP `external_exposure` table and help concretize these resources for use in data pipelines.
 
 ## Status
 

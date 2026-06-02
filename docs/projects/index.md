@@ -11,7 +11,7 @@ EnVar is part of a broader portfolio of [TISLab](https://tislab.org/) projects t
 | [CLAD](clad.md) | Geospatial data linkage for All of Us | Charisse Madlock-Brown, Jim Phuong, Anne Thessen |
 | [Microschema](microschema.md) | LinkML-based CDE specifications | Anne Thessen, Madan Krishnamurthy, Sierra Moxon |
 | [BioData Catalyst DMC](bdc-dmc.md) | Geospatial capacity for BDC | Anne Thessen (MPI) |
-| [OHDSI GIS Working Group](ohdsi-gis.md) | Gaia catalog and OMOP external exposure table | Jay Greenfield, Anne Thessen, Jim Phuong |
+| [OHDSI GIS Working Group](ohdsi-gis.md) | gaiaCatalog and OMOP `external_exposure` table | Jay Greenfield, Anne Thessen, Jim Phuong |
 | [EnVar](envar.md) | Environmental CDEs and OMOP guidelines | Anne Thessen, Melissa Haendel (PIs) |
 | [BDC Data Portal](bdc-portal.md) | Geospatial data tools for BDC users | TISLab |
 
@@ -19,7 +19,7 @@ EnVar is part of a broader portfolio of [TISLab](https://tislab.org/) projects t
 
 The projects form a network of complementary efforts:
 
-- The **OHDSI GIS WG** provides the core infrastructure (Gaia, OMOP external exposure table) that other projects build on
+- The **OHDSI GIS WG** provides the core infrastructure (Gaia toolchain, OMOP `external_exposure` table) that other projects build on
 - **HIV & Climate Change** is a concrete use case that exercises the GIS WG infrastructure
 - **Geodata 4 Health** develops the data standards (environmental CDEs, geolocation standards) needed across all projects
 - **CLAD** provides real-world data linkage for All of Us and inspired the Geodata 4 Health collaboration area

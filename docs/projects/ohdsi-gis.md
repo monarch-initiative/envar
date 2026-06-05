@@ -10,15 +10,6 @@ Develop and maintain the geospatial infrastructure for OMOP, including [gaiaCata
 
 Active. Meets weekly. Conversations are often very technical, focused on OHDSI-specific development.
 
-## Regular Attendees
-
-- **Jay Greenfield**
-- **Anne Thessen**
-- **Jim Phuong**
-- **Tim Rossi**
-- **Charles Schmitt**
-- **Tim Norris**
-
 ## Connections
 
 - Provides the core infrastructure that the [HIV & Climate Change](hiv-climate.md) project is designed to test

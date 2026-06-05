@@ -1,6 +1,7 @@
 # EnVar: Environmental Variables for Health Outcomes
 
-Supporting the integration of environmental exposure data into the [OMOP Common Data Model](https://ohdsi.github.io/CommonDataModel/), in collaboration with the [OHDSI GIS Working Group](https://ohdsi.github.io/GIS/). EnVar is funded by the [NIEHS HEW Data Accelerator](https://www.niehs.nih.gov/research/programs/extreme-weather).
+Supporting the integration of environmental exposure data into the [OMOP Common Data Model](https://ohdsi.github.io/CommonDataModel/), in collaboration with the [OHDSI GIS Working Group](https://ohdsi.github.io/GIS/).
+This work will support the [NIEHS HEW Data Accelerator](https://www.niehs.nih.gov/research/programs/extreme-weather) in seeking to standardize geospatial-based Environmental Determinants of Health (GB-EDoHs).
 
 ## Background
 
@@ -11,7 +12,7 @@ EnVar contributes to this effort by bringing environmental health domain experti
 ## What We Contribute
 
 - **Landscape analysis** — surveying how environmental datasets are used in epidemiological research, what metadata is typically reported (or missing), and where gaps exist in current OMOP vocabulary coverage
-- **Environmental micro-schemas** — [LinkML](https://linkml.io/)-based metadata specifications that capture the full context of environmental variables (what was measured, how, where, when, and at what resolution), complementing the structural work in Gaia
+- **Environmental micro-schemas** — [LinkML](https://linkml.io/)-based metadata specifications that capture the full context of environmental variables (what was measured, how, where, when, and at what resolution) and are semantically grounded using ontologies, complementing the structural work in Gaia.
 - **Vocabulary and metadata contributions** — working with the GIS WG to expand OMOP vocabulary coverage for environmental exposures and improve metadata standards for [gaiaCatalog](https://github.com/OHDSI/gaiaCatalog)
 - **Guidance for data producers** — helping geospatial tool developers produce OMOP-compatible environmental data outputs
 

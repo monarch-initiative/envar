@@ -15,7 +15,7 @@ At the last ESIP meeting, the group held a work-a-thon to brainstorm requirement
 ## Co-chairs
 
 - **Anne Thessen**
-- **Charles Schmitt**
+- **Maria Shatz**
 
 ## Frequent Attendees
 
@@ -24,6 +24,7 @@ At the last ESIP meeting, the group held a work-a-thon to brainstorm requirement
 - **Jim Phuong**
 - **Jay Greenfield**
 - **Maria Shatz** — NIEHS
+- **Charles Schmitt**
 
 ## Origin
 

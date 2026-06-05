@@ -2,13 +2,15 @@
 
 ## Goal
 
-Create capacity for using geospatial data in [BioData Catalyst](https://biodatacatalyst.nhlbi.nih.gov/) (BDC). Anne Thessen is an MPI for this project.
+Create capacity for using geospatial data in [BioData Catalyst](https://biodatacatalyst.nhlbi.nih.gov/) (BDC).
 
 ## Status
 
 Active. The current DMC award (OT2HL167310) ends August 2026; for the planned renewal, the team is working through milestones for geospatial data integration. Plans include engaging [CLAD](clad.md) to do similar work on geolocation and linking.
 
 Anne and Charles Schmitt have been discussing BDC's use of NIEHS data products, tools, and services, and have engaged the BDC Program Officer about a specific use case with BDC using NIEHS data — a meeting to discuss this is planned.
+
+Anne Thessen and  Chris Siege are MPIs for this project, Corey Cox is Tech lead.
 
 ## Key Details
 

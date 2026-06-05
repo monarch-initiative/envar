@@ -12,8 +12,8 @@ Active. This group meets fortnightly and has a shared Google Drive.
 
 - **Anne Thessen** — lead (manages this project and the Geodata 4 Health collaboration)
 - **Jay Greenfield** — [CODATA](https://codata.org/)
-- **Jim Phuong**
-- **Tim Norris**
+- **Jim Phuong** - Univ. Washington
+- **Tim Norris** - Univ Miami
 - **Flavian Otieno** — [African Population and Health Research Center](https://aphrc.org/) (APHRC)
 - **Dorothy Mailosi** — APHRC
 

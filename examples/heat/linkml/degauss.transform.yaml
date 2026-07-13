@@ -21,7 +21,7 @@ class_derivations:
       address:
         expr: >-
           address.geocoder_input if address.geocoder_input
-          else address.street + " " + address.zip
+          else str(address.street) + " " + str(address.zip)
       start_date:
         populated_from: window_start
       end_date:

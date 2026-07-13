@@ -32,8 +32,7 @@ per-`Patient` derivation can't reach the parent `PatientCohort.study_window`.
 The nested, non-deprecated `class_derivations` form used here requires an
 **unreleased** linkml-map (`git+https://github.com/linkml/linkml-map@8267d3a`,
 PR #235 head) — the released `0.5.2` only supports the deprecated
-`object_derivations`. dm-bip's `211-enum-derivations-with-unreleased-linkml-stuff`
-branch already pins this build.
+`object_derivations`. dm-bip already pins this build on a feature branch.
 
 ## Run
 

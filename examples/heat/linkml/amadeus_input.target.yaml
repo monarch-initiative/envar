@@ -1,0 +1,36 @@
+id: https://w3id.org/envar/heat/amadeus_input
+name: envar_heat_amadeus_input
+title: EnVar heat scenario — Amadeus point-location input (target schema)
+description: >-
+  Target schema for the Amadeus input table. Amadeus's calculate_covariates()
+  consumes an sf-style point table: one row per (person × location) with lat,
+  lon, and a temporal window. Mirrors the CSV that amadeus/translate.py emits:
+  person_loc_id, lat, lon, start_date, end_date.
+prefixes:
+  linkml: https://w3id.org/linkml/
+  envar: https://w3id.org/envar/heat/
+default_prefix: envar
+default_range: string
+imports:
+  - linkml:types
+
+classes:
+  AmadeusLocationTable:
+    tree_root: true
+    attributes:
+      rows:
+        range: AmadeusLocation
+        multivalued: true
+        inlined_as_list: true
+
+  AmadeusLocation:
+    attributes:
+      person_loc_id:
+      lat:
+        range: float
+      lon:
+        range: float
+      start_date:
+        range: date
+      end_date:
+        range: date

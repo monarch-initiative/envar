@@ -1,0 +1,31 @@
+id: envar-amadeus-transform
+title: EnVar patients → Amadeus point-location table
+source_schema:
+  name: envar_heat_patients
+target_schema:
+  name: envar_heat_amadeus_input
+
+class_derivations:
+  AmadeusLocationTable:
+    populated_from: PatientCohort
+    slot_derivations:
+      rows:
+        populated_from: patients
+
+  # Registered top-level derivation; the runtime resolves the `rows` slot to
+  # this because its populated_from (Patient) matches the source element type.
+  AmadeusLocation:
+    populated_from: Patient
+    slot_derivations:
+      person_loc_id:
+        expr: "str(person_id)"
+      lat:
+        populated_from: geocoded.lat
+      lon:
+        populated_from: geocoded.lon
+      # window_start/window_end were denormalized onto each Patient by
+      # prepare.py, so these are plain populated_from (no parent-scope reach).
+      start_date:
+        populated_from: window_start
+      end_date:
+        populated_from: window_end

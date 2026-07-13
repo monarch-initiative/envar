@@ -3,4 +3,6 @@ site/
 .env
 examples/heat/degauss/_cache/
 examples/heat/degauss/_docker_workdir/
+examples/heat/linkml/inputs/
+examples/heat/linkml/out/
 CLAUDE.local.md

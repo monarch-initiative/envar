@@ -1,0 +1,33 @@
+id: https://w3id.org/envar/heat/degauss_input
+name: envar_heat_degauss_input
+title: EnVar heat scenario — DeGAUSS geocoder input (target schema)
+description: >-
+  Target schema for the DeGAUSS geocoder input CSV. Mirrors what
+  degauss/translate.py emits: person_id, address, start_date, end_date. The
+  address is DeGAUSS's expected "street + zip" form.
+prefixes:
+  linkml: https://w3id.org/linkml/
+  envar: https://w3id.org/envar/heat/
+default_prefix: envar
+default_range: string
+imports:
+  - linkml:types
+
+classes:
+  DegaussCohortTable:
+    tree_root: true
+    attributes:
+      rows:
+        range: DegaussRow
+        multivalued: true
+        inlined_as_list: true
+
+  DegaussRow:
+    attributes:
+      person_id:
+        range: integer
+      address:
+      start_date:
+        range: date
+      end_date:
+        range: date

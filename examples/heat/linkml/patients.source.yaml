@@ -1,0 +1,91 @@
+id: https://w3id.org/envar/heat/patients
+name: envar_heat_patients
+title: EnVar heat scenario — canonical patient cohort (source schema)
+description: >-
+  Structural schema for data/patients_example1.json, the canonical input to the
+  EnVar heat example. This is the SOURCE schema for the dm-bip / linkml-map
+  transforms that replace the hand-written translate.py scripts.
+prefixes:
+  linkml: https://w3id.org/linkml/
+  envar: https://w3id.org/envar/heat/
+default_prefix: envar
+default_range: string
+imports:
+  - linkml:types
+
+classes:
+  PatientCohort:
+    tree_root: true
+    description: Top-level document — a study window plus a list of patients.
+    attributes:
+      schema_version:
+      description:
+      study_window:
+        range: StudyWindow
+        inlined: true
+      patients:
+        range: Patient
+        multivalued: true
+        inlined_as_list: true
+
+  StudyWindow:
+    attributes:
+      start:
+        range: date
+      end:
+        range: date
+      note:
+
+  Patient:
+    attributes:
+      person_id:
+        range: integer
+        identifier: true
+      sex:
+      year_of_birth:
+        range: integer
+      address:
+        range: Address
+        inlined: true
+      geocoded:
+        range: Geocode
+        inlined: true
+      observation_period:
+        range: ObservationPeriod
+        inlined: true
+      window_start:
+        range: date
+        description: study_window.start denormalized onto the patient by prepare.py
+      window_end:
+        range: date
+        description: study_window.end denormalized onto the patient by prepare.py
+
+  Address:
+    attributes:
+      street:
+      city:
+      state:
+      zip:
+      country:
+      geocoder_input:
+
+  Geocode:
+    attributes:
+      lat:
+        range: float
+      lon:
+        range: float
+      precision:
+      score:
+        range: float
+      geocode_result:
+      datum:
+      epsg:
+        range: integer
+
+  ObservationPeriod:
+    attributes:
+      start:
+        range: date
+      end:
+        range: date

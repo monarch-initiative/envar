@@ -8,3 +8,4 @@ examples/heat/omop-gaia/linkml/inputs/
 examples/heat/omop-gaia/linkml/out/
 examples/heat/omop-gaia/linkml/indir/
 examples/heat/omop-gaia/linkml/err.log
+examples/heat/omop-gaia/linkml/vendor/

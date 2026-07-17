@@ -1,0 +1,37 @@
+id: envar-daymet-to-external-exposure
+title: EnVar Daymet value table → OHDSI GIS ExternalExposure
+source_schema:
+  name: envar_heat_daymet_values
+target_schema:
+  name: linkml_ohdsi_gis_extension_envar
+
+class_derivations:
+  ExternalExposure:
+    populated_from: DaymetValueRow
+    slot_derivations:
+      # Deterministic surrogate for the single-source demo (person_id + yyyymmdd).
+      # Real surrogate-key assignment is a loader concern; this keeps the required
+      # identifier populated so output validates.
+      external_exposure_id:
+        expr: 'int(str(person_id) + date.replace("-", ""))'
+      person_id:
+        populated_from: person_id
+      value_as_number:
+        populated_from: tmax
+      # Daymet Tmax is a per-day point value: start == end == the observation day.
+      exposure_start_date:
+        populated_from: date
+      exposure_end_date:
+        populated_from: date
+      # Provenance linkage back to the EnVar sidecar (the whole point of EnVar).
+      exposure_source_value:
+        populated_from: provenance_id
+      # Unit carried as a source value; unit_concept_id (coded) is a vocab gap.
+      dose_unit_source_value:
+        populated_from: units_ucum
+
+      # --- GAPS, left unpopulated on purpose (tracked for follow-on) ---
+      # location_id:            needs person → Location join (increment 2)
+      # exposure_concept_id:    vocab mapping; sidecar target_concept_id is a gap
+      # unit_concept_id:        vocab mapping for UCUM Cel → OMOP concept
+      # exposure_type_concept_id: OMOP type concept for modeled exposures

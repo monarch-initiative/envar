@@ -8,6 +8,11 @@ target_schema:
 class_derivations:
   ExternalExposure:
     populated_from: DaymetValueRow
+    joins:
+      # person → Location: fills location_id from the prepare_locations.py lookup.
+      PersonLocation:
+        source_key: person_id
+        lookup_key: person_id
     slot_derivations:
       # Deterministic surrogate for the single-source demo (person_id + yyyymmdd).
       # Real surrogate-key assignment is a loader concern; this keeps the required
@@ -30,8 +35,11 @@ class_derivations:
       dose_unit_source_value:
         populated_from: units_ucum
 
+      # location_id via the person → Location join above.
+      location_id:
+        expr: "{PersonLocation.location_id}"
+
       # --- GAPS, left unpopulated on purpose (tracked for follow-on) ---
-      # location_id:            needs person → Location join (increment 2)
       # exposure_concept_id:    vocab mapping; sidecar target_concept_id is a gap
       # unit_concept_id:        vocab mapping for UCUM Cel → OMOP concept
       # exposure_type_concept_id: OMOP type concept for modeled exposures

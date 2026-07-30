@@ -34,3 +34,13 @@ classes:
         description: sidecar variable units (UCUM), e.g. Cel
       exposure_model_type:
         description: sidecar exposure_model type, e.g. spatial_interpolation
+
+  PersonLocation:
+    description: >-
+      person_id → location_id lookup consumed by the ExternalExposure join.
+      Produced by prepare_locations.py from the geocoder output.
+    attributes:
+      person_id:
+        range: integer
+      location_id:
+        range: integer

@@ -15,7 +15,8 @@ back to its EnVar sidecar — so it's the durable seed of D6.1, not scaffolding.
 |---|---|
 | `daymet_values.source.yaml`               | Source schema for the Daymet value table (stands in for schema-automator inference) |
 | `prepare_omop.py`                         | Denormalizes the EnVar sidecar's metadata onto each value row |
-| `daymet_to_external_exposure.transform.yaml` | Trans-spec: `DaymetValueRow` → `ExternalExposure` |
+| `prepare_locations.py`                    | Builds the OMOP `Location` table + `person_id → location_id` lookup (deduped by address) |
+| `daymet_to_external_exposure.transform.yaml` | Trans-spec: `DaymetValueRow` → `ExternalExposure`, joined to `PersonLocation` for `location_id` |
 | `patch_target_schema.py`                  | Regenerates the **local patch** of the #27 target schema (see below) |
 | `vendor/…local-patch.yaml`                | Generated, temporary patched target schema — do not hand-edit |
 
@@ -42,15 +43,19 @@ LM=<linkml-map built from 8267d3a>
 uv run --script patch_target_schema.py "$GIS"
 TARGET=vendor/linkml_ohdsi_gis_extension_envar.local-patch.yaml
 
-# 1. denormalize the sidecar onto the value rows
+# 1. denormalize the sidecar onto the value rows, and build the Location table + lookup
 uv run --script prepare_omop.py \
   ../../degauss/outputs/cohort_addresses_geocoded_daymet.csv \
   ../../degauss/outputs/envar/cohort_addresses_geocoded_daymet.provenance.json \
   --out inputs/daymet_values_prepared.csv
+uv run --script prepare_locations.py ../../degauss/outputs/cohort_addresses_geocoded.csv
 
 # 2. transform. NOTE: map-data needs a DIRECTORY with a <SourceType>.csv file —
-#    a single CSV path silently yields 0 rows.
-mkdir -p indir && cp inputs/daymet_values_prepared.csv indir/DaymetValueRow.csv
+#    a single CSV path silently yields 0 rows. Both the primary rows and the
+#    PersonLocation join lookup go in the directory.
+mkdir -p indir
+cp inputs/daymet_values_prepared.csv indir/DaymetValueRow.csv
+cp inputs/PersonLocation.csv indir/PersonLocation.csv
 $LM map-data -T daymet_to_external_exposure.transform.yaml \
   -s daymet_values.source.yaml --target-schema "$TARGET" \
   -f csv -o out/external_exposure.csv indir/
@@ -62,14 +67,14 @@ linkml-validate -s "$TARGET" -C ExternalExposure out/external_exposure.csv
 ## Status — increment 1 (real data, runnable)
 
 Produces 24 real `ExternalExposure` rows (3 persons × 8 days) from the real
-Daymet fixture, and **validates** against the (locally patched) target schema.
-QC passes: row counts, `value_as_number` == source Tmax, provenance linkage on
-every row, unique surrogate keys. Headline check — person 91204 on 2022-07-19 =
-43.93 °C.
+Daymet fixture, each carrying a `location_id` resolved via a person → Location
+join, plus a real OMOP `Location` table (3 deduped addresses). **Validates**
+against the (locally patched) target schema. QC passes: row counts,
+`value_as_number` == source Tmax, provenance linkage on every row, unique
+surrogate keys, `location_id` FK integrity + join correctness. Headline check —
+person 91204 on 2022-07-19 = 43.93 °C.
 
 ### Known gaps (follow-on)
-- **person → Location join** for `location_id` — currently a null placeholder;
-  the join (linkml-map `joins`) is increment 2.
 - **Vocabulary mapping** for `exposure_concept_id`, `unit_concept_id`,
   `exposure_type_concept_id` — null pending mapping; the sidecar's
   `target_concept_id` is itself a declared gap (`concept_status: gap`).

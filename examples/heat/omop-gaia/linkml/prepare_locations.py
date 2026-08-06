@@ -30,7 +30,7 @@ def main() -> int:
     p.add_argument("--lookup-out", type=Path, default=Path("inputs/PersonLocation.csv"))
     args = p.parse_args()
 
-    with args.geocoded_csv.open() as fh:
+    with args.geocoded_csv.open(newline="") as fh:
         rows = list(csv.DictReader(fh))
 
     # Assign a surrogate location_id per unique address (dedupe).

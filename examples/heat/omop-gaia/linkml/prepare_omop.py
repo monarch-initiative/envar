@@ -42,7 +42,7 @@ def main() -> int:
         "exposure_model_type": side.get("exposure_model", {}).get("type", ""),
     }
 
-    with args.value_csv.open() as fh:
+    with args.value_csv.open(newline="") as fh:
         rows = list(csv.DictReader(fh))
 
     out_cols = ["person_id", "date", "tmax", "provenance_id", "units_ucum", "exposure_model_type"]

@@ -16,9 +16,10 @@ class_derivations:
     slot_derivations:
       # Deterministic surrogate for the single-source demo (person_id + yyyymmdd).
       # Real surrogate-key assignment is a loader concern; this keeps the required
-      # identifier populated so output validates.
+      # key populated so output validates. str(date) because the source declares
+      # `date` as a LinkML date, which arrives as a datetime.date, not a string.
       external_exposure_id:
-        expr: 'int(str(person_id) + date.replace("-", ""))'
+        expr: 'int(str(person_id) + str(date).replace("-", ""))'
       person_id:
         populated_from: person_id
       value_as_number:
@@ -39,7 +40,22 @@ class_derivations:
       location_id:
         expr: "{PersonLocation.location_id}"
 
-      # --- GAPS, left unpopulated on purpose (tracked for follow-on) ---
-      # exposure_concept_id:    vocab mapping; sidecar target_concept_id is a gap
-      # unit_concept_id:        vocab mapping for UCUM Cel → OMOP concept
-      # exposure_type_concept_id: OMOP type concept for modeled exposures
+      # --- Unmapped concept ids ---
+      # Vocabulary mapping is still an open gap (the sidecar's own
+      # target_concept_id is declared `concept_status: gap`). These are emitted
+      # as 0 rather than null: 0 is OMOP's standard "unmapped concept" sentinel,
+      # so it states the gap in the target model's own vocabulary instead of
+      # leaving a hole. Replace with real concept ids once mapping lands.
+      #
+      # `expr: "0"` rather than the more declarative `value: 0`: on linkml-map
+      # 0.5.3 a bare `value:` derivation still gets checked as if it had an
+      # implicit populated_from, so map-data emits a spurious "source slot not
+      # found" error for each one. Same output either way.
+      exposure_concept_id:
+        expr: "0"
+      exposure_type_concept_id:
+        expr: "0"
+      exposure_relationship_concept_id:
+        expr: "0"
+      unit_concept_id:
+        expr: "0"

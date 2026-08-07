@@ -48,9 +48,10 @@ class_derivations:
       # leaving a hole. Replace with real concept ids once mapping lands.
       #
       # `expr: "0"` rather than the more declarative `value: 0`: on linkml-map
-      # 0.5.3 a bare `value:` derivation still gets checked as if it had an
-      # implicit populated_from, so map-data emits a spurious "source slot not
-      # found" error for each one. Same output either way.
+      # 0.5.3 a constant derivation gets an identity `populated_from` injected,
+      # so map-data reports a spurious "source slot not found" error for each
+      # one (linkml/linkml-map#326). Output is identical either way; switch to
+      # `value:` once that lands.
       exposure_concept_id:
         expr: "0"
       exposure_type_concept_id:

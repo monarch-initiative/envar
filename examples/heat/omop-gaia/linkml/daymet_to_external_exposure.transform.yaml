@@ -1,0 +1,62 @@
+id: envar-daymet-to-external-exposure
+title: EnVar Daymet value table → OHDSI GIS ExternalExposure
+source_schema:
+  name: envar_heat_daymet_values
+target_schema:
+  name: linkml_ohdsi_gis_extension_envar
+
+class_derivations:
+  ExternalExposure:
+    populated_from: DaymetValueRow
+    joins:
+      # person → Location: fills location_id from the prepare_locations.py lookup.
+      PersonLocation:
+        source_key: person_id
+        lookup_key: person_id
+    slot_derivations:
+      # Deterministic surrogate for the single-source demo (person_id + yyyymmdd).
+      # Real surrogate-key assignment is a loader concern; this keeps the required
+      # key populated so output validates. str(date) because the source declares
+      # `date` as a LinkML date, which arrives as a datetime.date, not a string.
+      external_exposure_id:
+        expr: 'int(str(person_id) + str(date).replace("-", ""))'
+      person_id:
+        populated_from: person_id
+      value_as_number:
+        populated_from: tmax
+      # Daymet Tmax is a per-day point value: start == end == the observation day.
+      exposure_start_date:
+        populated_from: date
+      exposure_end_date:
+        populated_from: date
+      # Provenance linkage back to the EnVar sidecar (the whole point of EnVar).
+      exposure_source_value:
+        populated_from: provenance_id
+      # Unit carried as a source value; unit_concept_id (coded) is a vocab gap.
+      dose_unit_source_value:
+        populated_from: units_ucum
+
+      # location_id via the person → Location join above.
+      location_id:
+        expr: "{PersonLocation.location_id}"
+
+      # --- Unmapped concept ids ---
+      # Vocabulary mapping is still an open gap (the sidecar's own
+      # target_concept_id is declared `concept_status: gap`). These are emitted
+      # as 0 rather than null: 0 is OMOP's standard "unmapped concept" sentinel,
+      # so it states the gap in the target model's own vocabulary instead of
+      # leaving a hole. Replace with real concept ids once mapping lands.
+      #
+      # `expr: "0"` rather than the more declarative `value: 0`: on linkml-map
+      # 0.5.3 a constant derivation gets an identity `populated_from` injected,
+      # so map-data reports a spurious "source slot not found" error for each
+      # one (linkml/linkml-map#326). Output is identical either way; switch to
+      # `value:` once that lands.
+      exposure_concept_id:
+        expr: "0"
+      exposure_type_concept_id:
+        expr: "0"
+      exposure_relationship_concept_id:
+        expr: "0"
+      unit_concept_id:
+        expr: "0"

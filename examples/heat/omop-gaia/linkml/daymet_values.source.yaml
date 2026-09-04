@@ -1,0 +1,46 @@
+id: https://w3id.org/envar/heat/daymet_values
+name: envar_heat_daymet_values
+title: EnVar heat scenario — Daymet value table (source schema)
+description: >-
+  Source schema for the per-(person × day) Daymet Tmax value table emitted by
+  the DeGAUSS/Daymet step (cohort_addresses_geocoded_daymet.csv), after
+  prepare_omop.py has denormalized the matching EnVar sidecar's metadata onto
+  each row. This stands in for the schema dm-bip would infer from the value
+  table via schema-automator; it is the SOURCE of the daymet →
+  ExternalExposure trans-spec.
+prefixes:
+  linkml: https://w3id.org/linkml/
+  envar: https://w3id.org/envar/heat/
+default_prefix: envar
+default_range: string
+imports:
+  - linkml:types
+
+classes:
+  DaymetValueRow:
+    description: One (person × day) Tmax observation plus denormalized sidecar metadata.
+    attributes:
+      person_id:
+        range: integer
+      date:
+        range: date
+      tmax:
+        range: float
+        description: daily maximum air temperature, °C (UCUM Cel)
+      # --- denormalized from the EnVar sidecar by prepare_omop.py ---
+      provenance_id:
+        description: sidecar provenance_id, e.g. 01KT4EDTA3GAXAG0DMRCHHGAJA-daymet
+      units_ucum:
+        description: sidecar variable units (UCUM), e.g. Cel
+      exposure_model_type:
+        description: sidecar exposure_model type, e.g. spatial_interpolation
+
+  PersonLocation:
+    description: >-
+      person_id → location_id lookup consumed by the ExternalExposure join.
+      Produced by prepare_locations.py from the geocoder output.
+    attributes:
+      person_id:
+        range: integer
+      location_id:
+        range: integer

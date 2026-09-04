@@ -4,3 +4,7 @@ site/
 examples/heat/degauss/_cache/
 examples/heat/degauss/_docker_workdir/
 CLAUDE.local.md
+examples/heat/omop-gaia/linkml/inputs/
+examples/heat/omop-gaia/linkml/out/
+examples/heat/omop-gaia/linkml/indir/
+examples/heat/omop-gaia/linkml/err.log

@@ -1,0 +1,137 @@
+id: https://w3id.org/envar/examples/gaia-catalog/source
+name: gaia-catalog-source
+title: GaiaCatalog entry — flattened per-variable source schema
+description: |-
+  Source schema for a GaiaCatalog dataset entry, flattened to one record per
+  measured variable by `prepare_gaia.py`.
+
+  This stands in for the real thing. The authoritative LinkML model of the
+  GaiaCatalog metadata belongs in `linkml-ohdsi-gis-extension-envar` (branch
+  `gaia_catalog_addition`, where DCATMetaData / ETLMetaData / JSONLDMetaData
+  mirror the catalog's three metadata files). That branch currently lists its
+  Gaia slots without defining them, and its open question — "How to model
+  nested variables?" — is unresolved, so there is nothing yet for linkml-map to
+  bind to. This schema is the minimum needed to make the mapping executable, in
+  the same spirit as `../../heat/omop-gaia/linkml/daymet_values.source.yaml`
+  standing in for schema-automator inference.
+
+  The flattening answers the nested-variables question by example: the catalog's
+  `variableMeasured` array-of-dicts becomes one row per variable with the
+  dataset-level metadata denormalized onto it. Everything is typed `string`
+  because that is how the catalog stores it — `minValue: "8"`, not `8`.
+license: CC-BY-4.0
+
+prefixes:
+  gaia: https://w3id.org/envar/examples/gaia-catalog/
+  linkml: https://w3id.org/linkml/
+default_prefix: gaia
+default_range: string
+
+imports:
+  - linkml:types
+
+classes:
+
+  GaiaVariableRow:
+    tree_root: true
+    description: >-
+      One measured variable from a GaiaCatalog entry, carrying that entry's
+      dataset-level metadata. Corresponds to a single `variableMeasured` element
+      of `meta_json-ld_*.json` that has a `propertyID`.
+    attributes:
+
+      # ── dataset identity (JSON-LD) ─────────────────────────────────────
+      dataset_id:
+        description: JSON-LD `@id` — a GDSC landing page, not a persistent identifier.
+      dataset_name:
+      dataset_description:
+      dataset_url:
+      dataset_type:
+        description: e.g. "Vector Dataset".
+      catalog_version:
+        description: >-
+          JSON-LD `version`. This is the catalog record's own timestamp, NOT the
+          version of the upstream dataset — the dataset version ("v1") appears
+          only inside the title string.
+      date_published:
+      date_modified:
+        description: Non-ISO in the catalog — "2025-05-23 08:47:15", space-separated.
+      keywords:
+        description: Semicolon-joined from the JSON-LD `keywords` array.
+      language:
+
+      # ── measurementTechnique (nested DefinedTermSets) ──────────────────
+      data_representation:
+        description: raster | vector | table — the chosen termCode of the dataRepresentation set.
+      vector_geometry:
+        description: point | line | multipolygon | ... — chosen termCode of the vectorGeometry set.
+
+      # ── spatial (JSON-LD spatialCoverage + additionalProperty) ─────────
+      spatial_place_name:
+      spatial_bbox_polygon:
+        description: Bare coordinate list from `spatialCoverage[].geo.polygon`, not WKT.
+      bbox_west:
+        range: float
+        description: West bound, reduced from the bbox ring by `prepare_gaia.py`.
+      bbox_south:
+        range: float
+      bbox_east:
+        range: float
+      bbox_north:
+        range: float
+      crs:
+        description: From `additionalProperty`, as a URL ("https://epsg.io/4326"), not a CURIE.
+
+      # ── citation and rights (DCAT) ─────────────────────────────────────
+      identifier:
+        description: >-
+          `dct:identifier`. Overloaded across the catalog — a DOI URL here, a
+          plain landing-page URL for other datasets. There is no DOI-specific field.
+      creator:
+      publisher:
+      rights:
+      issued:
+      accrual_periodicity:
+      landing_page:
+      conforms_to:
+        description: CRS the data conforms to, e.g. "EPSG:4326".
+      checksum:
+        description: Frequently the literal string "TBD" in the catalog.
+
+      # ── acquisition (ETL) ──────────────────────────────────────────────
+      etl_source_url:
+        description: Upstream source download URL — the real provenance root.
+      etl_structure:
+      etl_geometry:
+      etl_epsg:
+      etl_local_epsg:
+      etl_format:
+      etl_download_method:
+        description: e.g. "wget".
+      etl_last_updated:
+      etl_update_frequency:
+      etl_nodata:
+        description: Semicolon-joined nodata declaration, e.g. "int4;-9999".
+      etl_table:
+
+      # ── the measured variable (JSON-LD variableMeasured) ───────────────
+      variable_name:
+        description: Column name, e.g. "avpmu_2016". Carries the year as a naming convention.
+      variable_description:
+      property_id:
+        description: >-
+          An OMOP concept id in the 2-billion custom range. Shared by every
+          year-column of the same variable, so it identifies the variable kind
+          but not the column.
+      data_type:
+        description: Postgres storage type ("double", "int4"), not a semantic data type.
+      unit_code:
+        description: >-
+          An OMOP concept id for the unit ("32964"), not a UCUM code — the same
+          field holds UCUM-like strings in other entries.
+      unit_text:
+        description: Free text, e.g. "micrograms/cubic meter".
+      min_value:
+      max_value:
+      start_date:
+      end_date:

@@ -33,6 +33,8 @@ def find_meta(d: Path, kind: str) -> Path:
     hits = sorted(d.glob(f"meta_{kind}_*.json"))
     if not hits:
         raise SystemExit(f"no meta_{kind}_*.json in {d}")
+    if len(hits) > 1:
+        raise SystemExit(f"{len(hits)} meta_{kind}_*.json in {d}; expected one entry per directory")
     return hits[0]
 
 
@@ -98,6 +100,7 @@ def main() -> int:
 
     mt = jsonld.get("measurementTechnique", [])
     coverage = jsonld.get("spatialCoverage", [])
+    polygon = bbox_polygon(coverage)
 
     # Dataset-level metadata, stamped onto every variable row.
     dataset = {
@@ -116,8 +119,8 @@ def main() -> int:
         "vector_geometry": term_code(mt, "vectorGeometry"),
         # spatialCoverage: a named Place plus a bbox Place carrying a GeoShape
         "spatial_place_name": place_name(coverage),
-        "spatial_bbox_polygon": bbox_polygon(coverage),
-        **bbox_bounds(bbox_polygon(coverage)),
+        "spatial_bbox_polygon": polygon,
+        **bbox_bounds(polygon),
         "crs": additional_property(
             jsonld.get("additionalProperty", []),
             "http://dbpedia.org/resource/Spatial_reference_system",
@@ -142,7 +145,7 @@ def main() -> int:
         "etl_download_method": etl.get("download", ""),
         "etl_last_updated": etl.get("last_updated", ""),
         "etl_update_frequency": etl.get("update_frequency", ""),
-        "etl_nodata": ";".join(etl.get("nodata", [])),
+        "etl_nodata": "; ".join(etl.get("nodata", [])),
         "etl_table": etl.get("table", ""),
     }
 

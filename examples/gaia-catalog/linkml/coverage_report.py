@@ -1,13 +1,15 @@
 #!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["pyyaml"]
+# dependencies = ["linkml-runtime", "pyyaml"]
 # ///
 """coverage_report.py — measure how much of an EnVar sidecar a Gaia entry fills.
 
-Walks the EnvironmentalExposureRecord composite blocks, and for each reports how
-many slots the transform populated, how many it left empty, and — the number
-that matters — how many REQUIRED slots the catalog could not supply.
+Resolves EnvironmentalExposureRecord through SchemaView, so imported slots and
+slot_usage overrides are induced exactly the way `linkml-validate` induces them.
+That matters: `subject` is required and comes from the LinkML Microschema
+Profile, not from a local envar_*.yaml, so globbing the schema directory misses
+it. The required-unfilled count here is meant to reconcile with the validator.
 
 This is the measurement behind the D2.2 claim that OMOP-GIS/GaiaCatalog metadata
 is inadequate for environmental exposure data: not an assertion, but a count of
@@ -16,83 +18,127 @@ required fields with no source.
 from __future__ import annotations
 
 import argparse
-import glob
 import sys
 from pathlib import Path
 
 import yaml
+from linkml_runtime.utils.schemaview import SchemaView
 
-BLOCKS = [
-    ("variable_identity", "VariableIdentity"),
-    ("data_layout", "DataLayout"),
-    ("spatial_reference", "SpatialReference"),
-    ("temporal_reference", "TemporalReference"),
-    ("source_dataset", "SourceDataset"),
-    ("exposure_model", "ExposureModel"),
-    ("linkage_method", "LinkageMethod"),
-    ("tool_run", "ToolRun"),
-]
+RECORD_CLASS = "EnvironmentalExposureRecord"
+EMPTY = (None, "", [], {})
 
 
-def load_schema(schema_dir: Path) -> tuple[dict, dict]:
-    classes: dict = {}
-    slots: dict = {}
-    for f in glob.glob(str(schema_dir / "*.yaml")):
-        doc = yaml.safe_load(Path(f).read_text()) or {}
-        classes.update({k: (v or {}) for k, v in (doc.get("classes") or {}).items()})
-        slots.update({k: (v or {}) for k, v in (doc.get("slots") or {}).items()})
-    return classes, slots
+def resolve_schema(p: Path) -> Path:
+    """Accept either the schema directory or envar_record.yaml itself."""
+    return p / "envar_record.yaml" if p.is_dir() else p
 
 
-def required(name: str, cls: dict, slots: dict) -> bool:
-    usage = (cls.get("slot_usage") or {}).get(name) or {}
-    return bool(usage.get("required") or (slots.get(name) or {}).get("required"))
+def partition(sv: SchemaView) -> tuple[list, list]:
+    """Split the record's slots into composite blocks and top-level scalars."""
+    blocks, scalars = [], []
+    for name in sv.class_slots(RECORD_CLASS):
+        induced = sv.induced_slot(name, RECORD_CLASS)
+        sub = sv.class_slots(induced.range) if induced.range in sv.all_classes() else []
+        (blocks if sub else scalars).append((name, induced, sub))
+    return blocks, scalars
+
+
+def filled_in(rec: dict, block: str, names: list[str]) -> list[str]:
+    present = rec.get(block) or {}
+    return [n for n in names if present.get(n) not in EMPTY]
+
+
+def signature(rec: dict, blocks: list) -> tuple:
+    return tuple(sorted((b, n) for b, _, sub in blocks for n in filled_in(rec, b, sub)))
+
+
+def report(rows: list, title: str, flag_empty: bool = True) -> tuple[int, int]:
+    print(f"\n{title}")
+    print(f"{'':22} {'filled':>7} {'empty':>7} {'total':>7}   required unfilled")
+    print("-" * 66)
+    tot_filled = tot_slots = 0
+    for name, filled, total, unfilled_req in rows:
+        flag = "  <-- entirely empty" if flag_empty and not filled and total else ""
+        print(f"{name:22} {filled:>7} {total - filled:>7} {total:>7}   {unfilled_req}{flag}")
+        tot_filled += filled
+        tot_slots += total
+    return tot_filled, tot_slots
 
 
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("records", type=Path, help="transform output YAML")
-    p.add_argument("schema_dir", type=Path, help="EnVar micro-schema schema/ directory")
+    p.add_argument("schema", type=Path, help="EnVar schema dir, or envar_record.yaml")
     args = p.parse_args()
 
-    classes, slots = load_schema(args.schema_dir)
+    sv = SchemaView(str(resolve_schema(args.schema)))
+    blocks, scalars = partition(sv)
+
     # map-data emits a multi-document YAML stream, one document per record.
     records = [d for d in yaml.safe_load_all(args.records.read_text()) if d]
+    if not records:
+        raise SystemExit(f"no records in {args.records}")
     rec = records[0]
 
     print(f"Records emitted: {len(records)}")
-    print(f"Analysing: {rec.get('provenance_id')}\n")
-
-    hdr = f"{'block':22} {'filled':>7} {'empty':>7} {'total':>7}   required unfilled"
-    print(hdr)
-    print("-" * len(hdr))
-
-    tot_filled = tot_slots = 0
-    gaps: list[tuple[str, str]] = []
-
-    for slot_name, class_name in BLOCKS:
-        cls = classes.get(class_name, {})
-        names = cls.get("slots", []) or []
-        present = rec.get(slot_name) or {}
-        filled = [n for n in names if present.get(n) not in (None, "", [], {})]
-        unfilled_req = [n for n in names if n not in filled and required(n, cls, slots)]
-        gaps += [(slot_name, n) for n in unfilled_req]
-        tot_filled += len(filled)
-        tot_slots += len(names)
-        flag = "  <-- entirely empty" if not filled else ""
+    sigs = {signature(r, blocks) for r in records}
+    if len(sigs) == 1:
+        print("All records share one fill signature — the table describes every record.")
+    else:
         print(
-            f"{slot_name:22} {len(filled):>7} {len(names) - len(filled):>7} {len(names):>7}"
-            f"   {len(unfilled_req)}{flag}"
+            f"WARNING: {len(sigs)} distinct fill signatures across {len(records)} records. "
+            "The table below describes only the first; the totals are NOT entry-wide."
         )
+    print(f"Analysing: {rec.get('provenance_id')}")
 
-    print("-" * len(hdr))
-    pct = 100.0 * tot_filled / tot_slots if tot_slots else 0.0
-    print(f"{'TOTAL':22} {tot_filled:>7} {tot_slots - tot_filled:>7} {tot_slots:>7}   {len(gaps)}")
-    print(f"\nComposite-block coverage: {tot_filled}/{tot_slots} slots ({pct:.0f}%)")
-    print(f"Required slots the catalog cannot supply: {len(gaps)}\n")
+    gaps: list[str] = []
+    required_rows, optional_rows = [], []
+    for name, induced, sub in blocks:
+        filled = filled_in(rec, name, sub)
+        # A required slot inside an absent optional block is not an error, so
+        # only required blocks contribute gaps — same rule linkml-validate uses.
+        unfilled_req = [
+            n for n in sub
+            if n not in filled and sv.induced_slot(n, induced.range).required
+        ] if induced.required else []
+        gaps += [f"{name}.{n}" for n in unfilled_req]
+        row = (name, len(filled), len(sub), len(unfilled_req))
+        (required_rows if induced.required else optional_rows).append(row)
 
-    for block, name in gaps:
-        print(f"  {block}.{name}")
+    req_filled, req_slots = report(required_rows, "required composite blocks")
+    print("-" * 66)
+    print(f"{'SUBTOTAL':22} {req_filled:>7} {req_slots - req_filled:>7} {req_slots:>7}   {len(gaps)}")
+
+    opt_filled, opt_slots = report(
+        optional_rows,
+        "optional composite blocks (excluded from the headline figure)",
+        flag_empty=False,
+    )
+
+    scalar_rows = []
+    for name, induced, _ in scalars:
+        is_filled = rec.get(name) not in EMPTY
+        unfilled_req = int(induced.required and not is_filled)
+        if unfilled_req:
+            gaps.append(name)
+        scalar_rows.append((name, int(is_filled), 1, unfilled_req))
+    sc_filled, sc_slots = report(scalar_rows, "top-level scalar slots")
+
+    tot_filled = req_filled + opt_filled + sc_filled
+    tot_slots = req_slots + opt_slots + sc_slots
+
+    print("\n" + "=" * 66)
+    print(
+        f"Required-block coverage: {req_filled}/{req_slots} slots "
+        f"({100.0 * req_filled / req_slots:.0f}%)"
+    )
+    print(
+        f"Whole-record coverage:   {tot_filled}/{tot_slots} leaf slots "
+        f"({100.0 * tot_filled / tot_slots:.0f}%)"
+    )
+    print(f"\nRequired slots the catalog cannot supply: {len(gaps)}\n")
+    for g in gaps:
+        print(f"  {g}")
 
     return 0
 

@@ -1,0 +1,42 @@
+{
+  "dataset_short_code": "aqs",
+  "variable_name": [
+    "pm25_88101",
+    "pm10_81102",
+    "co_42101",
+    "no2_42602",
+    "so2_42401"
+  ],
+  "tool_name": "amadeus",
+  "tool_version": "2.0.2",
+  "r_version": "R version 4.4.0 (2024-04-24)",
+  "execution_mode": "synthetic_offline_fixture",
+  "run_timestamp_utc": "2026-09-03T17:31:03Z",
+  "r_call": "for (p in c(88101, 81102, 42101, 42602, 42401)) { download_data(dataset_name='aqs', year=2022, parameter_code=p, ...) }; <point extraction NOT via calculate_covariates() -- see ../../README.md>",
+  "input_file": "../../input/patient_locations.csv",
+  "input_file_sha256": "30f9e97d64c14df1f208b56ef12888df2666325feb508a3f30329f2c23233387",
+  "input_row_count": 3,
+  "output_file": "outputs/synthetic/aqs_all_params.csv",
+  "output_file_sha256": "a1d33de2f0fe50dc3086d34f8eb74513e2c48aab14268776254e9a8dcb2cb0b3",
+  "output_row_count": 24,
+  "output_columns": [
+    "person_id",
+    "date",
+    "lat",
+    "lon",
+    "value",
+    "monitor_distance_m",
+    "pm10",
+    "co",
+    "no2",
+    "so2"
+  ],
+  "extraction_window_start": "2022-07-15",
+  "extraction_window_end": "2022-07-22",
+  "raster_reported": {
+    "resolution_m": null,
+    "crs": null,
+    "native_units_as_stored": null
+  },
+  "_honesty_note": "execution_mode=synthetic_offline_fixture: VALUES are illustrative placeholders, not real AQS output. See ../../README.md. Point-network structure, not a raster -- see ../../README.md's known-issues note."
+}

@@ -1,0 +1,91 @@
+# Amadeus -> NARR cicep -- EnVar sidecar.
+# Generated from the curated/validated rhum sidecar's shared base
+# (same NARR product, same run, same spatial/temporal/source/
+# exposure_model/linkage/tool_run facts) plus per-variable facts
+# researched for this batch -- see
+# curator/generate_narr_variants.py for the sourced deltas and
+# curation_log.md for the shared-base sourcing and exclusions.
+schema_version: '0.1'
+provenance_id: 01NARRCICEPPHXDEMO01-narr-cicep
+subject: cohort:envar_amadeus_multi_demo_2022
+phi_status: no_phi
+variable_identity:
+  variable_name: cicep
+  variable_label: categorical ice pellets flag
+  standard_name: ENVAR:categorical_ice_pellets_flag
+  units_ucum: '1'
+  concept_status: gap
+  value_data_type: binary_flag
+  value_range_plausible_min: 0
+  value_range_plausible_max: 1
+data_layout:
+  table_orientation: wide
+  value_column: cicep
+  subject_column: person_id
+  time_column: date
+spatial_reference:
+  native_spatial_resolution_m: 32463
+  native_spatial_resolution_descriptor: 32 km Lambert Conformal Conic reanalysis grid (NCEP Eta Model
+    native grid)
+  crs: +proj=lcc +lat_0=50 +lon_0=-107 +lat_1=50 +lat_2=50 +x_0=5632642.22547 +y_0=4612545.65137 +datum=WGS84
+    +units=m +no_defs
+  spatial_extent_descriptor: North America
+  extraction_method: nearest_cell
+  target_geography_type: point_residence
+temporal_reference:
+  temporal_resolution: daily
+  temporal_aggregation_method: maximum
+  temporal_aggregation_window_seconds: 86400
+  day_boundary_convention: utc_midnight
+  calendar: gregorian
+  temporal_coverage_start: '1979-01-01'
+  extraction_window_start: '2022-07-15'
+  extraction_window_end: '2022-07-22'
+source_dataset:
+  source_dataset_name: NCEP North American Regional Reanalysis (NARR)
+  source_dataset_short_code: narr
+  source_dataset_doi: null
+  source_dataset_doi_missing_reason: not_provided_by_source
+  source_dataset_version: current
+  source_dataset_spatial_extent: North America
+  source_producer_institution: NOAA National Centers for Environmental Prediction (NCEP); distributed
+    by NOAA/OAR/ESRL Physical Sciences Laboratory (PSL)
+  source_citation_apa: Mesinger, F., DiMego, G., Kalnay, E., Mitchell, K., Shafran, P.C., Ebisuzaki, W.,
+    Jovic, D., Woollen, J., Rogers, E., Berbery, E.H., Ek, M.B., Fan, Y., Grumbine, R., Higgins, W., Li,
+    H., Lin, Y., Manikin, G., Parrish, D., & Shi, W. (2006). North American Regional Reanalysis. Bulletin
+    of the American Meteorological Society, 87(3), 343-360. https://doi.org/10.1175/BAMS-87-3-343
+  source_license_spdx: CC-BY-4.0
+  source_native_format: netcdf4_cf
+  source_access_url: https://psl.noaa.gov/data/gridded/data.narr.html
+uncertainty: {}
+exposure_model:
+  exposure_model_type: reanalysis
+  exposure_model_inputs:
+  - NCEP Eta Model 4D data assimilation of radiosonde, surface, aircraft, and satellite moisture observations
+  exposure_model_known_biases:
+  - Near-surface humidity in a coarse (32 km) reanalysis grid can be biased in arid regions and smooths
+    sub-grid moisture gradients -- same caveat documented for the schema's own ERA5 RH example, expected
+    to apply comparably here.
+linkage_method:
+  linkage_strategy: point_extraction_at_residence
+  geocoding_precision_propagated: range
+  address_period_alignment: address_history_from_emr
+tool_run:
+  tool_name: amadeus
+  tool_version: 2.0.2
+  tool_description: Offline demo run using a SYNTHETIC placeholder fixture (not real NARR output) -- see
+    run_manifest.json's execution_mode field and fixtures/README.md.
+  run_arguments: for (v in c('rhum.2m', 'uwnd.10m', 'vwnd.10m', 'air.2m', 'dpt.2m', 'pres.sfc', 'apcp',
+    'prate', 'crain', 'csnow', 'cfrzr', 'cicep', 'weasd', 'snod', 'snowc', 'dswrf', 'uswrf.sfc', 'dlwrf',
+    'ulwrf.sfc', 'gflux', 'lhtfl', 'shtfl', 'hpbl', 'tcdc', 'pr.wtr', 'cape', 'cin', 'veg', 'albedo',
+    'evap', 'vis')) { download_data(dataset_name='narr', year=2022, variable=v, directory_to_save=dir,
+    acknowledgement=TRUE, download=TRUE, hash=TRUE); proc <- process_covariates(covariate='narr', date=c('2022-07-15',
+    '2022-07-22'), variable=v, path=dir, extent=NULL); calculate_covariates(covariate='narr', from=proc,
+    locs=patient_locations, locs_id='person_id', radius=0, geom='sf') }
+  run_timestamp_utc: '2026-09-02T22:46:39Z'
+  input_file_sha256: 30f9e97d64c14df1f208b56ef12888df2666325feb508a3f30329f2c23233387
+  input_row_count: 3
+  output_file_sha256: d1ed1851d2ce22f767cd683f8ab13a057d8526be004ede2e735811da1b1b593e
+  output_row_count: 24
+provenance_chain:
+  provenance_chain_terminus_type: raw_source_download

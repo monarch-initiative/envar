@@ -42,7 +42,7 @@ transformation — they reshape inputs into the flat records linkml-map consumes
 
 ## Prerequisites
 
-| Requirement | Version | Notes |
+| Requirement | Known-good version | Notes |
 |---|---|---|
 | Python | ≥ 3.11 | |
 | [`linkml-map`](https://pypi.org/project/linkml-map/) | 0.5.3 | Released version is sufficient |
@@ -51,12 +51,19 @@ transformation — they reshape inputs into the flat records linkml-map consumes
 
 ```bash
 uv venv .venv
-uv pip install --python .venv/bin/python linkml-map linkml
+uv pip install --python .venv/bin/python 'linkml-map==0.5.3' 'linkml==1.11.1'
+source .venv/bin/activate
 ```
 
-!!! warning "`uv venv` ships no pip"
-    `python -m pip install` fails inside a `uv venv`. Use
-    `uv pip install --python <venv>/bin/python` as above.
+The versions above are the ones this pipeline is verified against. Newer releases are
+expected to work; pin them if you want to reproduce the documented run exactly.
+
+!!! warning "Activate the venv, and don't reach for `python -m pip`"
+    Every command below calls `linkml-map` and `linkml-validate` as bare console
+    scripts, so the venv must be **activated** (or you must invoke them by their full
+    `.venv/bin/` path). Separately, a `uv venv` ships no `pip`, so
+    `python -m pip install` fails inside it — use `uv pip install --python
+    <venv>/bin/python` as above.
 
 The mapping step needs no Docker and no network. Producing the *inputs* does — see
 [Generating the inputs](#generating-the-inputs).
@@ -100,9 +107,33 @@ Only the three fields above reach OMOP today; the rest is addressed under
 
 ### 3. Geocoder output (CSV)
 
-Used to build the OMOP `Location` table and the person → location lookup. Requires
-`person_id`, `lat`, `lon`, and address components (`matched_street`, `matched_city`,
-`matched_state`, `matched_zip`).
+Used by `prepare_locations.py` to build the OMOP `Location` table and the
+`person_id → location_id` lookup. For the heat scenario this is
+`degauss/outputs/cohort_addresses_geocoded.csv`.
+
+| Column | Required | Description |
+|---|---|---|
+| `person_id` | yes | Keys the person → location lookup |
+| `address` | yes | Deduplication key; becomes `Location.address_1` |
+| `matched_city` | no | → `Location.city`; blank if absent |
+| `matched_state` | no | → `Location.state`; blank if absent |
+| `matched_zip` | no | → `Location.zip`; blank if absent |
+| `lat` | no | → `Location.latitude`; blank if absent |
+| `lon` | no | → `Location.longitude`; blank if absent |
+
+Only `person_id` and `address` are hard requirements — the script raises `KeyError`
+without them. The rest are read defensively and emit an empty string when missing. The
+remaining columns in DeGAUSS geocoder output (`matched_street`, `start_date`,
+`end_date`, `score`, `precision`, `geocode_result`) are not read.
+
+`location_id` is a surrogate assigned per unique `address`, so two people at the same
+address share one `Location` row, as OMOP expects.
+
+!!! warning "Missing coordinates fail silently"
+    Because `lat`/`lon` are read defensively, a geocoder output lacking them yields
+    `Location` rows with empty coordinates rather than an error — and a `Location` with
+    no coordinates is useless for any downstream spatial join. Check that your geocoder
+    output carries coordinates before relying on the result.
 
 ## Running the pipeline
 

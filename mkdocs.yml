@@ -48,6 +48,10 @@ nav:
       - OHDSI GIS Working Group: projects/ohdsi-gis.md
       - EnVar: projects/envar.md
       - BioData Catalyst Data Portal: projects/bdc-portal.md
+  - Pipeline:
+      - Overview: pipeline/index.md
+      - ETL Pipeline: pipeline/etl.md
+      - "D6.1 Report": pipeline/d6-1-report.md
   - Surveys:
       - Overview: surveys/index.md
       - Landscape Report: surveys/landscape.md

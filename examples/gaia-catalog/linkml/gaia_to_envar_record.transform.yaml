@@ -1,0 +1,191 @@
+id: https://w3id.org/envar/examples/gaia-catalog/gaia-to-envar
+title: GaiaCatalog entry → EnVar EnvironmentalExposureRecord
+description: |-
+  Maps a flattened GaiaCatalog variable row onto the EnVar micro-schema sidecar
+  (`EnvironmentalExposureRecord`).
+
+  Mapping rule, applied strictly: a target slot is populated only where the
+  catalog STATES the value. Anything that would require inferring from prose,
+  from a column-naming convention, or from knowledge of a particular extraction
+  run is deliberately left unpopulated — those are the gaps this transform
+  exists to measure, and filling them with plausible guesses would erase the
+  finding.
+
+  The output is therefore expected NOT to validate against the target schema.
+  That is the result, not a defect: `linkml-validate` enumerates precisely which
+  required EnVar slots a catalog entry cannot supply. See `README.md`.
+
+prefixes:
+  gaia: https://w3id.org/envar/examples/gaia-catalog/
+  envar: https://w3id.org/linkml/microschemas/envar/
+
+source_schema: gaia_catalog.source.yaml
+
+class_derivations:
+
+  EnvironmentalExposureRecord:
+    populated_from: GaiaVariableRow
+    slot_derivations:
+
+      # `expr` with a quoted literal rather than the more declarative `value:`:
+      # on linkml-map 0.5.3 a constant derivation gets an identity
+      # `populated_from` injected, so map-data reports a spurious "source slot
+      # not found" error (linkml/linkml-map#326). Same workaround as the
+      # daymet → ExternalExposure spec.
+      schema_version:
+        expr: '"0.1.0"'
+
+      # Not a catalog field. The catalog entry plus the column name is the only
+      # stable handle a sidecar could key on.
+      provenance_id:
+        expr: "etl_table + ':' + variable_name"
+
+      # Catalog metadata describes a public dataset; it carries no PHI.
+      phi_status:
+        expr: '"no_phi"'
+
+      # ── variable identity ─────────────────────────────────────────────
+      variable_identity:
+        class_derivations:
+          VariableIdentity:
+            populated_from: GaiaVariableRow
+            slot_derivations:
+              variable_name:
+                populated_from: variable_name
+              variable_label:
+                populated_from: variable_description
+              units_display:
+                populated_from: unit_text
+              # The catalog stores these as strings ("0", "83"); EnVar types them
+              # numeric. Casting is normalization, not inference.
+              value_range_plausible_min:
+                expr: "float(min_value)"
+              value_range_plausible_max:
+                expr: "float(max_value)"
+              # `propertyID` is an OMOP concept id in the 2-billion custom range.
+              target_concept_vocabulary:
+                expr: '"omop"'
+              target_concept_id:
+                populated_from: property_id
+              # The concept exists — that is what carrying a propertyID means.
+              # It says nothing about whether the concept is a GOOD mapping;
+              # see the vocabulary-provenance section of the D2.2 audit.
+              concept_status:
+                expr: '"existing"'
+
+              # NOT POPULATED, and required by the target:
+              #   standard_name  — no CF/ontology name anywhere in the catalog
+              #   units_ucum     — `unitCode` holds an OMOP concept id ("32964"),
+              #                    not a UCUM code; `unitText` is free prose
+              #   value_data_type — `qudt:dataType` is a Postgres storage type
+              #                    ("double"), which does not determine whether a
+              #                    variable is continuous, ordinal or categorical
+              # Also absent: cf_cell_methods, native_units_ucum, unit conversion.
+
+      # ── spatial reference ─────────────────────────────────────────────
+      spatial_reference:
+        class_derivations:
+          SpatialReference:
+            populated_from: GaiaVariableRow
+            slot_derivations:
+              crs:
+                populated_from: conforms_to
+              # Catalog gives an axis-aligned ring; EnVar wants four numbers.
+              spatial_extent_bbox:
+                expr: "[bbox_west, bbox_south, bbox_east, bbox_north]"
+              spatial_extent_descriptor:
+                populated_from: spatial_place_name
+
+              # NOT POPULATED, and required by the target:
+              #   native_spatial_resolution_m — the catalog states geometry type
+              #       ("multipolygon") but never a resolution; for a vector
+              #       dataset of urban extents there is no single grid size
+              #   extraction_method      — a property of an extraction run
+              #   target_geography_type  — a property of an extraction run
+
+      # ── temporal reference ────────────────────────────────────────────
+      temporal_reference:
+        class_derivations:
+          TemporalReference:
+            populated_from: GaiaVariableRow
+            slot_derivations:
+              temporal_coverage_start:
+                populated_from: start_date
+              temporal_coverage_end:
+                populated_from: end_date
+
+              # NOT POPULATED, and required by the target:
+              #   temporal_resolution         — "annual" is knowable only from the
+              #       `avpmu_YYYY` column-naming convention and the description prose
+              #   temporal_aggregation_method — the description says "average annual
+              #       concentration", but only as free text
+              #   day_boundary_convention     — absent entirely
+              # Also absent: calendar, aggregation window, extraction window.
+
+      # ── source dataset ────────────────────────────────────────────────
+      source_dataset:
+        class_derivations:
+          SourceDataset:
+            populated_from: GaiaVariableRow
+            slot_derivations:
+              source_dataset_name:
+                populated_from: dataset_name
+              source_dataset_doi:
+                populated_from: identifier
+              source_producer_institution:
+                populated_from: creator
+              source_access_url:
+                populated_from: etl_source_url
+              source_native_format:
+                populated_from: etl_format
+
+              # NOT POPULATED, and required by the target:
+              #   source_dataset_version — the catalog's `version` is the catalog
+              #       RECORD's timestamp ("2026-08-23"), not the dataset version.
+              #       The real version ("v1") appears only inside the title string.
+              # Also unmapped: source_license_spdx — `dct:rights` is "Public Domain",
+              # which is a rights statement, not an SPDX identifier.
+
+      # ── data layout ───────────────────────────────────────────────────
+      data_layout:
+        class_derivations:
+          DataLayout:
+            populated_from: GaiaVariableRow
+            slot_derivations:
+              value_column:
+                populated_from: variable_name
+
+              # NOT POPULATED, and required by the target:
+              #   table_orientation — the entry is in fact wide (19 year-columns
+              #       sharing one propertyID), but the catalog never says so; it is
+              #       inferable only from the column-naming convention
+
+      # ── exposure model ────────────────────────────────────────────────
+      # Required by the target, and entirely unpopulated. The description prose
+      # mentions GWR and AOD inputs, but there is no field for model type,
+      # inputs, paper DOI, biases, or bias correction.
+      exposure_model:
+        class_derivations:
+          ExposureModel:
+            populated_from: GaiaVariableRow
+            slot_derivations: {}
+
+      # ── linkage method ────────────────────────────────────────────────
+      # Required by the target, and unpopulatable in principle: linkage describes
+      # how an exposure surface was joined to a patient cohort. A catalog entry
+      # predates and knows nothing about any cohort.
+      linkage_method:
+        class_derivations:
+          LinkageMethod:
+            populated_from: GaiaVariableRow
+            slot_derivations: {}
+
+      # ── tool run ──────────────────────────────────────────────────────
+      # Required by the target, and unpopulatable in principle: this records a
+      # specific execution (container digest, arguments, checksums, row counts).
+      # The catalog's own `spdx:checksum` is the literal string "TBD".
+      tool_run:
+        class_derivations:
+          ToolRun:
+            populated_from: GaiaVariableRow
+            slot_derivations: {}

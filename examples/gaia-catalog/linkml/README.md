@@ -20,6 +20,13 @@ blocks and top-level scalars included — it fills **22 of 178** leaf slots
 (**12%**). **16 required slots have no source in the catalog**, and **3 of the 8
 required blocks come out entirely empty**.
 
+That 16 is 15 + 1: the table below subtotals **15** required-unfilled slots
+across the eight required composite blocks, and the sixteenth is `subject`, a
+required *top-level scalar* counted in its own section further down. The split
+is easy to misread as an arithmetic error, so it is worth stating plainly —
+and `subject` is the more interesting of the two halves (see
+[finding 1](#1-three-required-blocks-are-unfillable-in-principle-not-by-omission)).
+
 ```
 required composite blocks
                         filled   empty   total   required unfilled

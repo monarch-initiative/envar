@@ -17,8 +17,15 @@ description: |-
 
   The flattening answers the nested-variables question by example: the catalog's
   `variableMeasured` array-of-dicts becomes one row per variable with the
-  dataset-level metadata denormalized onto it. Everything is typed `string`
-  because that is how the catalog stores it — `minValue: "8"`, not `8`.
+  dataset-level metadata denormalized onto it.
+
+  Attributes read from the catalog are typed `string`, because that is how the
+  catalog stores them — `minValue: "8"`, not `8`. The typing therefore tracks
+  provenance rather than semantics: `min_value`/`max_value` stay `string` here
+  and are cast to numbers in the trans-spec, where the cast is visible as a
+  stated normalization. The four `bbox_*` bounds are the one exception, typed
+  `float` because `prepare_gaia.py` derives them by reducing the bbox ring
+  rather than reading them from a catalog field.
 license: CC-BY-4.0
 
 prefixes:

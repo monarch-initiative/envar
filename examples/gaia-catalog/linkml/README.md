@@ -102,24 +102,28 @@ and the rule above is otherwise meant to leave no room for one.
 
 ## Run
 
+The EnVar model is a project dependency, pinned to an exact
+`linkml-microschemas-envar` commit by `uv.lock`; `uv sync` from the repo root
+installs it. `envar_model.py` locates its schema and refuses to run if the
+installed commit is not the pinned one.
+
 ```bash
 cd examples/gaia-catalog/linkml
-ENVAR=<path>/linkml-microschemas-envar/src/linkml_microschemas_envar/schema
-LM=linkml-map            # released 0.5.3 is sufficient
+ENVAR=$(uv run python envar_model.py)
 
 # 1. flatten the catalog entry to one row per measured variable
-uv run --script prepare_gaia.py ../fixtures --out inputs/gaia_variable_rows.json
+uv run python prepare_gaia.py ../fixtures --out inputs/gaia_variable_rows.json
 
 # 2. transform. NOTE: map-data needs a DIRECTORY containing a <SourceType>.json —
 #    a single JSON file holding a list is passed through untransformed, silently.
-mkdir -p indir && cp inputs/gaia_variable_rows.json indir/GaiaVariableRow.json
-$LM map-data -T gaia_to_envar_record.transform.yaml \
-  -s gaia_catalog.source.yaml --target-schema "$ENVAR/envar_record.yaml" \
+mkdir -p indir out && cp inputs/gaia_variable_rows.json indir/GaiaVariableRow.json
+uv run linkml-map map-data -T gaia_to_envar_record.transform.yaml \
+  -s gaia_catalog.source.yaml --target-schema "$ENVAR" \
   -o out/envar_records.yaml indir/
 
 # 3. the gap, enumerated two ways
-linkml-validate -s "$ENVAR/envar_record.yaml" -C EnvironmentalExposureRecord out/envar_records.yaml
-uv run --script coverage_report.py out/envar_records.yaml "$ENVAR"
+uv run linkml-validate -s "$ENVAR" -C EnvironmentalExposureRecord out/envar_records.yaml
+uv run python coverage_report.py out/envar_records.yaml
 ```
 
 ## Findings

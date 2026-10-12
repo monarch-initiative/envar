@@ -1,8 +1,3 @@
-#!/usr/bin/env -S uv run --script
-# /// script
-# requires-python = ">=3.11"
-# dependencies = []
-# ///
 """prepare_gaia.py — flatten a GaiaCatalog entry into per-variable source rows.
 
 A GaiaCatalog dataset directory carries its metadata in three files

@@ -3,9 +3,18 @@ name = "envar"
 version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "linkml>=1.12.0",
+    "linkml-map>=0.5.4",
+    "linkml-microschemas-envar",
+    "linkml-runtime>=1.12.0",
+    "pyyaml>=6.0.3",
+]
 
 [dependency-groups]
 dev = [
     "mkdocs-material>=9.7.6",
 ]
+
+[tool.uv.sources]
+linkml-microschemas-envar = { git = "https://github.com/monarch-initiative/linkml-microschemas-envar", rev = "main" }

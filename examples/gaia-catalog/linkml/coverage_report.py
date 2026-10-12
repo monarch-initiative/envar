@@ -1,8 +1,3 @@
-#!/usr/bin/env -S uv run --script
-# /// script
-# requires-python = ">=3.11"
-# dependencies = ["linkml-runtime", "pyyaml"]
-# ///
 """coverage_report.py — measure how much of an EnVar sidecar a Gaia entry fills.
 
 Resolves EnvironmentalExposureRecord through SchemaView, so imported slots and
@@ -24,13 +19,10 @@ from pathlib import Path
 import yaml
 from linkml_runtime.utils.schemaview import SchemaView
 
+from envar_model import schema_path
+
 RECORD_CLASS = "EnvironmentalExposureRecord"
 EMPTY = (None, "", [], {})
-
-
-def resolve_schema(p: Path) -> Path:
-    """Accept either the schema directory or envar_record.yaml itself."""
-    return p / "envar_record.yaml" if p.is_dir() else p
 
 
 def partition(sv: SchemaView) -> tuple[list, list]:
@@ -68,10 +60,9 @@ def report(rows: list, title: str, flag_empty: bool = True) -> tuple[int, int]:
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("records", type=Path, help="transform output YAML")
-    p.add_argument("schema", type=Path, help="EnVar schema dir, or envar_record.yaml")
     args = p.parse_args()
 
-    sv = SchemaView(str(resolve_schema(args.schema)))
+    sv = SchemaView(str(schema_path()))
     blocks, scalars = partition(sv)
 
     # map-data emits a multi-document YAML stream, one document per record.

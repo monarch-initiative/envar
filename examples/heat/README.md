@@ -129,3 +129,12 @@ from this pipeline. Run `just all && just verify` and you'll see the same
 numbers, plus the full sidecar diff across the two sources and a confirmation
 that every OMOP `external_exposure.exposure_source_value` resolves to a real
 sidecar.
+
+**Which Daymet number is which.** The 43.91 °C above is the `omop-gaia` leg's
+value, extracted via the **ORNL single-pixel API**. The `degauss` leg extracts
+the same Daymet V4 R1 Tmax at the same coordinates via the **DeGAUSS container's
+NetCDF tile** path and gets **43.93 °C** — and that is the number the D6.1
+linkml pipeline carries, since it consumes the degauss value table. The two
+paths differ by up to 0.02 °C across the window (44.61/44.60, 45.6/45.58,
+45.08/45.07, …). Neither is wrong; they are different extraction
+implementations of the same dataset. Quote the number *with* its path.

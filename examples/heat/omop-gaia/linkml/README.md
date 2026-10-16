@@ -4,6 +4,11 @@ The real EnVar ETL step (EnVar-Tracker #42): a declarative linkml-map trans-spec
 that turns the per-(person × day) Daymet value table into OHDSI GIS
 `ExternalExposure` rows, replacing the imperative logic in `../run.py`.
 
+Published documentation for this pipeline — usage, full input/output specs, and
+limitations — is on the EnVar site:
+<https://monarch-initiative.github.io/EnVar/pipeline/etl/>. This README is the
+implementation-level detail behind it.
+
 Unlike the throwaway front-half spike (patients JSON → tool input), this
 consumes the **published** target schema
 (`monarch-initiative/linkml-ohdsi-gis-extension-envar`, #27) and links every row

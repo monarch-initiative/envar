@@ -25,7 +25,7 @@ across the eight required composite blocks, and the sixteenth is `subject`, a
 required *top-level scalar* counted in its own section further down. The split
 is easy to misread as an arithmetic error, so it is worth stating plainly —
 and `subject` is the more interesting of the two halves (see
-[finding 1](#1-three-required-blocks-are-unfillable-in-principle-not-by-omission)).
+[finding 1](#1-two-required-blocks-cannot-exist-at-catalog-time-a-third-is-stated-only-in-prose)).
 
 ```
 required composite blocks
@@ -86,9 +86,10 @@ stores `"83"`, EnVar types it numeric), and reducing the bbox ring to four
 bounds (the catalog's ring is axis-aligned and already labelled bbox).
 
 One further exception is a *selection* rather than a normalization: the catalog
-states its CRS four times and they do not all agree (finding 7), so the
-transform picks `dct:conformsTo`. Recorded here because it is a judgement call,
-and the rule above is otherwise meant to leave no room for one.
+states a CRS five times, under names that do not say which is the storage CRS
+and which the analytic one (finding 7), so the transform picks `dct:conformsTo`.
+Recorded here because it is a judgement call, and the rule above is otherwise
+meant to leave no room for one.
 
 ## Files
 
@@ -99,6 +100,8 @@ and the rule above is otherwise meant to leave no room for one.
 | `prepare_gaia.py` | Flattens the three metadata files into one row per measured variable |
 | `gaia_to_envar_record.transform.yaml` | The trans-spec: `GaiaVariableRow` → `EnvironmentalExposureRecord` |
 | `coverage_report.py` | Counts filled / empty / required-unfilled per block, resolving the record through `SchemaView` so imported slots and `slot_usage` overrides induce the same way `linkml-validate` induces them |
+| `envar_model.py` | Locates the pinned EnVar schema and checks the installed model matches `uv.lock` |
+| `test_claims.py` | Checks the headline numbers, and the findings' statements of fact, against the fixtures and the pinned model |
 
 ## Run
 
@@ -126,104 +129,145 @@ uv run linkml-validate -s "$ENVAR" -C EnvironmentalExposureRecord out/envar_reco
 uv run python coverage_report.py out/envar_records.yaml
 ```
 
+The headline numbers, and the statements of fact in the findings below, are
+checked by `test_claims.py` (`uv run pytest examples/gaia-catalog/linkml` from
+the repo root). What the tests cannot check is the interpretation; that is
+where review is worth spending.
+
 ## Findings
 
-### 1. Three required blocks are unfillable in principle, not by omission
+### 1. Two required blocks cannot exist at catalog time; a third is stated only in prose
 
 `exposure_model`, `linkage_method` and `tool_run` come out empty — 49 slots
-between them. This is not a catalog defect to be fixed by adding fields. A
-catalog entry describes a *published dataset*; these blocks describe *what
-someone did with it* — which model produced the surface, how it was joined to a
-patient cohort, which container ran with which arguments over which inputs.
-That information does not exist at catalog time.
+between them — but not for the same reason, and the recommendation differs.
 
-`subject` fails for the same reason and is worth calling out separately, because
-it is easy to miss: it is required, and it is inherited from the imported LinkML
-Microschema Profile rather than declared in a local `envar_*.yaml`, so a tool
-that walks only the schema directory will not see it at all. A catalog entry has
-no subject — there is no cohort until someone runs an extraction against one.
-Fourth instance of the same structural gap.
+**Cannot exist at catalog time: `linkage_method`, `tool_run`.** A catalog entry
+describes a *published dataset*; these blocks describe *what someone did with
+it* — how it was joined to a patient cohort, which tool ran with which
+arguments. The catalog does describe *a* run: DCAT `prov:action` carries GDSC's
+own ETL pseudo-code. That is the catalog's ingestion of the dataset, not an
+extraction against a cohort, so it does not fill `tool_run`. The JSON-LD
+`about[0].potentialAction.description` — the catalog's slot for that
+transformation — is the literal string `"TODO"`.
 
-**Implication for EnVar:** the sidecar cannot be generated from the catalog. It
-must be emitted by the extraction tool at run time, with the catalog supplying
-only the dataset-identity layer. This is the concrete baseline of required model
-changes that D2.2's DoD asks for.
+`subject` fails for the same reason. It is required, and it is inherited from
+the imported LinkML Microschema Profile rather than declared in a local
+`envar_*.yaml`, so a tool that walks only the schema directory will not see it
+at all. There is no cohort until someone runs an extraction against one.
 
-### 2. Time is modelled as column names
+**Stated, with no structured home: `exposure_model`.** The catalog does state
+the model, in the dataset description: PM2.5 grids from MODIS, MISR and SeaWiFS
+aerosol optical depth with GWR, and country averages that are
+population-weighted. That is `exposure_model_type` and `exposure_model_inputs`
+— and `population_weighting_source` — in prose. Same class of gap as
+`temporal_aggregation_method` ("average annual concentration", also prose),
+and fixable on the catalog side in a way the two blocks above are not.
+
+**Implication for EnVar:** this is the producer-stage / linkage-stage split
+already agreed for the model — linkage-stage fields non-required so a
+producer-only sidecar validates — reached here from the catalog side. The
+catalog can supply the producer layer, partly in prose; the linkage layer has to
+be emitted by the extraction tool at run time.
+
+Two of the 16 required gaps are EnVar's own: `native_spatial_resolution_m` is
+required and typed float on a vector polygon dataset, and
+`day_boundary_convention` is required on annual data. Neither has a
+`missing_reason` companion, while `extraction_buffer_m` and
+`population_weighting_source` do. Filed as
+[linkml-microschemas-envar#42](https://github.com/monarch-initiative/linkml-microschemas-envar/issues/42).
+
+### 2. The year is in the catalog, just not in the JSON-LD
 
 All 19 measured variables (`avpmu_1998` … `avpmu_2016`) share a single
-`propertyID` — `2052499839`. The concept identifies the *variable kind*; the
-year lives only in the column name and in per-variable `startDate`/`endDate`.
-The catalog never states that the table is wide, so `data_layout.table_orientation`
-is unfillable even though the entry plainly is wide.
+`propertyID` — `2052499839`. In the JSON-LD the year lives only in the column
+name and in per-variable `startDate`/`endDate`.
 
-### 3. `propertyID` and `unitCode` are overloaded across the catalog
+But the catalog does distinguish the years at the identifier level. The
+per-variable `attributes` strings in the ETL and DCAT files end in a distinct
+Gaia concept id per year — `gaia-407` for 1998 through `gaia-425` for 2016 —
+and that id appears nowhere in the JSON-LD. The WG's metadata template puts the
+source concept in `propertyID` and the Gaia concept in `alternateName`; this
+entry has no `alternateName` anywhere. The discriminator exists in the profile;
+the deployed entry does not emit it.
+
+No field states that the table is wide, so `data_layout.table_orientation` is
+unfillable even though the entry plainly is wide.
+
+### 3. `propertyID` and `unitCode` carry OMOP concept ids
 
 Here `propertyID` is an OMOP concept id (`"2052499839"`) and `unitCode` is an
-OMOP concept id for the unit (`"32964"`). In EnVar's own heat-scenario JSON-LD
-fixture the same two fields hold a CF standard-name URL and a UCUM-ish code
-(`"CEL"`). Same fields, incompatible meanings, no discriminator.
+OMOP concept id for the unit (`"32964"`). schema.org defines `unitCode` as a
+UN/CEFACT common code or a URL, so a bare OMOP id there is outside its own
+vocabulary, and nothing in the entry says which vocabulary either code is from.
 
-This connects the two halves of the audit: `2052499839` sits in the 2-billion
-custom range, so the vocabulary-provenance problem documented in D2.2's
-vocabulary section reappears *inside* the metadata layer. `units_ucum` is
-required by EnVar and cannot be filled, because what the catalog offers is an
-opaque concept id and free-text prose (`"micrograms/cubic meter"`).
+`2052499839` sits in the 2-billion custom range, so the vocabulary-provenance
+problem documented in D2.2's vocabulary section reappears *inside* the metadata
+layer. `units_ucum` is required by EnVar and cannot be filled, because what the
+catalog offers is an opaque concept id and free-text prose
+(`"micrograms/cubic meter"`).
 
-The same pattern blocks two more required slots, and both look like mapping bugs
-until you check the vocabularies:
+Two more slots look like mapping bugs until you check the vocabularies:
 
 | catalog states | EnVar wants | why it is left empty |
 |---|---|---|
-| `qudt:dataType` = `double` | `value_data_type` ∈ `continuous_numeric`, `categorical`, `binary_flag`, `count`, `event_marker` | `double` is a *storage* type; the enum is *measurement semantics*. A double can hold a count or a binary flag. Filling it is inference. |
-| `dct:rights` = `Public Domain` | `source_license_spdx` | "Public Domain" is not an SPDX identifier. `CC0-1.0` would be a guess about which public-domain instrument applies. |
+| `qudt:dataType` = `double` | `value_data_type` (required) ∈ `continuous_numeric`, `categorical`, `binary_flag`, `count`, `event_marker` | `double` is a *storage* type; the enum is *measurement semantics*. A double can hold a count or a binary flag. Filling it is inference. |
+| `dct:rights` = `Public Domain` | `source_license_spdx` (recommended) | "Public Domain" is not an SPDX identifier. `CC0-1.0` would be a guess about which public-domain instrument applies. |
 
 Both are cases where the catalog *does* state something and EnVar *does* have a
 slot, yet no honest mapping exists — the gap is in the vocabulary binding, not
-in the presence of data. Those are the most expensive gaps to find and the
-easiest to paper over.
+in the presence of data.
 
 ### 4. `version` does not mean the dataset's version
 
-The catalog's `version` (`"2026-08-23"`) is the catalog record's own timestamp.
-The dataset version — `v1` — appears only inside the title string. So
-`source_dataset_version`, a required EnVar slot, has no reliable source despite
-the catalog appearing to carry a version field.
+The JSON-LD `version` (`"2026-08-23"`) and DCAT `gdsc:version`
+(`"2026-08-23T15:55:26Z"`) are both timestamps of the catalog record. The
+dataset version — `v1` — appears only inside title strings, never as a field of
+its own. So `source_dataset_version`, a required EnVar slot, has no reliable
+source despite the catalog appearing to carry two version fields.
 
-### 5. Things only the ETL file knows
+### 5. The three files overlap heavily, and JSON-LD is not a superset
 
-`meta_json-ld_*` is the richest file but not a superset. The upstream source URL
-— the actual provenance root, a SEDAC download — appears only in
-`meta_etl_*.source`. Any model of the catalog has to read all three files;
-Bryan's branch is right to define `DCATMetaData` / `ETLMetaData` / `JSONLDMetaData`
-as separate classes.
+The ETL and DCAT files duplicate each other in places: the upstream SEDAC URL is
+both `etl.source` and `dcat:downloadURL`, the per-variable `attributes` block is
+identical in both, and so is the bbox.
+
+The JSON-LD is the richest file but not a superset. The per-year Gaia concept
+ids (finding 2), `local_epsg` and `gdsc:analyticConformsTo` (finding 7), and the
+ETL pseudo-code (finding 1) appear only in the other two. Any model of the
+catalog has to read all three files; Bryan's branch is right to define
+`DCATMetaData` / `ETLMetaData` / `JSONLDMetaData` as separate classes.
 
 ### 6. An EnVar-side gap, not a Gaia one
 
 `source_native_format` is an enum of `netcdf4_cf`, `hdf5`, `geotiff`, `grib1`,
 `grib2`, `csv_station_observations`, `zarr`, `parquet`. The catalog says `shp`.
-The micro-schema's format enum covers raster and array formats but no vector
-formats, while a large share of the catalog is vector data. This one is a fix
-for the micro-schema, not for Gaia.
+The format enum covers raster and array formats but no vector formats, so any
+vector entry in the catalog will fail the same way. This one is a fix for the
+micro-schema, not for Gaia.
 
-### 7. The CRS is stated four times, in three vocabularies, with no precedence rule
+### 7. The CRS is stated five times, under names that do not say what each one is
 
 | where | value |
 |---|---|
 | `meta_dcat_*` → `dct:conformsTo` | `EPSG:4326` |
+| `meta_dcat_*` → `gdsc:analyticConformsTo` | `EPSG:3857` |
 | `meta_json-ld_*` → `additionalProperty[Spatial_reference_system]` | `https://epsg.io/4326` |
 | `meta_etl_*` → `epsg` | `EPSG:4326` |
 | `meta_etl_*` → `local_epsg` | `EPSG:3857` |
 
-Three agree on WGS 84; the fourth is Web Mercator, presumably the projection the
-data is served or tiled in. Nothing states which is authoritative for the stored
-geometries, and nothing defines what `local_epsg` means relative to `epsg`. The
-transform takes `dct:conformsTo`, because it is the only one typed as a
-conformance statement rather than a free-text property — but that is a judgement
-call a consumer should not have to make.
+These do not disagree. `gdsc:analyticConformsTo` says what the 3857 values are:
+the analytic projection, against 4326 as the storage CRS. But that is two
+things under five names, and only one of them says which is which. The
+transform takes `dct:conformsTo` as the storage CRS — a judgement call a
+consumer should not have to make.
+
+The bbox is the control case: it is stated three times (JSON-LD
+`spatialCoverage[].geo.polygon`, `dcat:bbox`, ETL `extent`), and all three give
+the same coordinates.
 
 Redundant metadata that mostly agrees is worse than a single field: it reads as
-corroboration while quietly carrying a disagreement.
+corroboration while quietly carrying a disagreement — or, as here, an
+unlabelled distinction that looks like one.
 
 ## Status and limits
 

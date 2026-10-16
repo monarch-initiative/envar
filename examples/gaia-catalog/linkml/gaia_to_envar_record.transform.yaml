@@ -161,9 +161,11 @@ class_derivations:
               #       inferable only from the column-naming convention
 
       # ── exposure model ────────────────────────────────────────────────
-      # Required by the target, and entirely unpopulated. The description prose
-      # mentions GWR and AOD inputs, but there is no field for model type,
-      # inputs, paper DOI, biases, or bias correction.
+      # Required by the target, and entirely unpopulated — but unlike linkage
+      # and tool_run below, the catalog does state this. The description says
+      # the grids are GWR over MODIS/MISR/SeaWiFS AOD and the country averages
+      # are population-weighted: exposure_model_type, exposure_model_inputs and
+      # population_weighting_source, in prose with no structured field.
       exposure_model:
         class_derivations:
           ExposureModel:

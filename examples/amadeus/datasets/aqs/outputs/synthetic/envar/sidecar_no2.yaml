@@ -1,0 +1,87 @@
+# Amadeus -> EPA AQS NO2 (parameter 42602) -- EnVar sidecar.
+# Generated from the curated/validated PM2.5 sidecar's shared base
+# (same monitor network, same run, same spatial/temporal/source/
+# exposure_model/linkage/tool_run facts) plus per-pollutant facts
+# researched for this batch -- see
+# curator/generate_aqs_variants.py for the sourced deltas and
+# curation_log.md for the shared-base sourcing and exclusions.
+schema_version: '0.1'
+provenance_id: 01AQSNO2PHXDEMO01-aqs-no2
+subject: cohort:envar_amadeus_multi_demo_2022
+phi_status: no_phi
+variable_identity:
+  variable_name: no2_42602
+  variable_label: daily maximum 1-hour nitrogen dioxide
+  standard_name: CF:mole_fraction_of_nitrogen_dioxide_in_air
+  cf_cell_methods: 'time: maximum'
+  units_ucum: ppb
+  concept_status: gap
+  value_data_type: continuous_numeric
+  value_range_plausible_min: 0
+  value_range_plausible_max: 500
+data_layout:
+  table_orientation: wide
+  value_column: no2
+  subject_column: person_id
+  time_column: date
+spatial_reference:
+  native_spatial_resolution_m: 0
+  native_spatial_resolution_descriptor: point station network (EPA AQS monitor)
+  crs: EPSG:4269
+  spatial_extent_descriptor: United States (state/local/tribal monitoring agencies)
+  extraction_method: point_station_lookup
+  target_geography_type: point_residence
+temporal_reference:
+  temporal_resolution: daily
+  temporal_aggregation_method: maximum
+  temporal_aggregation_window_seconds: 86400
+  day_boundary_convention: observation_dependent
+  calendar: gregorian
+  extraction_window_start: '2022-07-15'
+  extraction_window_end: '2022-07-22'
+source_dataset:
+  source_dataset_name: EPA Air Quality System (AQS) Pre-Generated Data Files -- Daily Summary, parameter
+    42602
+  source_dataset_short_code: aqs
+  source_dataset_doi: null
+  source_dataset_doi_missing_reason: not_provided_by_source
+  source_dataset_version: AirData daily_88101_2022 pre-generated file
+  source_dataset_spatial_extent: United States
+  source_producer_institution: US Environmental Protection Agency (EPA), Office of Air Quality Planning
+    and Standards
+  source_citation_apa: US Environmental Protection Agency. Air Quality System Data Mart [internet database].
+    Available via https://www.epa.gov/outdoor-air-quality-data/download-daily-data. Accessed 2026-09-02.
+  source_license_spdx: public-domain-us-gov
+  source_native_format: csv_station_observations
+  source_access_url: https://aqs.epa.gov/aqsweb/airdata/download_files.html
+uncertainty: {}
+exposure_model:
+  exposure_model_type: direct_measurement
+  exposure_model_inputs:
+  - FRM (Federal Reference Method, manual gravimetric) or FEM (Federal Equivalent Method, automated) PM2.5
+    monitors; daily summary is the mean of sub-daily samples at the reporting monitor (or the single 24-hour
+    sample where the monitor reports one)
+  exposure_model_known_biases:
+  - Regulatory monitor placement is not spatially uniform (documented equity/coverage gaps in rural and
+    some lower-income urban areas), so nearest-monitor distance varies widely and can be large in monitor-sparse
+    regions -- this is exactly why linkage_max_distance_to_station_m is recorded, not left implicit.
+linkage_method:
+  linkage_strategy: point_extraction_at_residence
+  linkage_max_distance_to_station_m: 50000
+  geocoding_precision_propagated: range
+  address_period_alignment: address_history_from_emr
+tool_run:
+  tool_name: amadeus
+  tool_version: 2.0.2
+  tool_description: Offline demo run using a SYNTHETIC placeholder fixture (not real AQS output) -- see
+    run_manifest.json's execution_mode field and fixtures/README.md.
+  run_arguments: 'for (p in c(88101, 81102, 42101, 42602, 42401)) { download_data(dataset_name=''aqs'',
+    year=2022, parameter_code=p, directory_to_save=dir, acknowledgement=TRUE, download=TRUE, hash=TRUE)
+    }; <point extraction step NOT CONFIRMED -- see known-issues.md #4>'
+  run_timestamp_utc: '2026-09-02T22:46:39Z'
+  input_file_sha256: 30f9e97d64c14df1f208b56ef12888df2666325feb508a3f30329f2c23233387
+  input_row_count: 3
+  output_file_sha256: a1d33de2f0fe50dc3086d34f8eb74513e2c48aab14268776254e9a8dcb2cb0b3
+  output_row_count: 24
+provenance_chain:
+  provenance_chain_terminus_type: raw_source_download

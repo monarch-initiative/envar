@@ -8,8 +8,10 @@ it through the **three** systems the heat scenario describes:
 | `degauss/`   | **DeGAUSS** (NIEHS, Cincinnati Children's)        | Geocodes addresses → coordinates, then extracts daily Tmax from a 1 km gridded weather product. | U.S. Census geocoder + ORNL Daymet Single-Pixel API |
 | `amadeus/`   | **Amadeus** (NIEHS, CHORDS)                       | Extracts daily Tmmx from a different 4 km gridded weather product at the same coordinates.       | Northwest Knowledge Network THREDDS (GridMET) |
 | `omop-gaia/` | **OMOP CDM / OHDSI GIS (GAIA)**                   | Assembles the Daymet and GridMET outputs into OMOP `person`, `location`, `external_exposure` rows that point back to the upstream EnVar sidecars. | Reads the two outputs above |
+| `chel/`      | **CHEL** (CLAD, All of Us)                        | Links each patient to CHEL 2024 extreme heat days on the H3 res-3 grid, by residence point and by the AMIA 2026 RWD workshop's county → hexagon crosswalk. See [`chel/README.md`](chel/README.md). | `cladteam/CHEL` + workshop crosswalk (GitHub, pinned) + FCC Census Area API |
 
-Same input. Three implementations. Three outputs.
+Same input. Three implementations. Three outputs. The `chel/` step adds a
+fourth source, an annual heat-day climatology, with two linkage routes.
 
 ## Layout
 
@@ -27,6 +29,11 @@ examples/heat/
 │   ├── translate.py                  patients_example1.json → Amadeus locations table
 │   ├── run.py                        GridMET point extraction, emit EnVar sidecar
 │   └── outputs/                      *.csv + *.provenance.yaml
+├── chel/
+│   ├── run.py                        point + county → H3 res-3 → CHEL 2024 E_NEHD,
+│   │                                 emit two EnVar sidecars
+│   └── outputs/                      per-route CSVs, external_exposure.csv,
+│                                     run_manifest.json, envar/ sidecars
 └── omop-gaia/
     ├── translate.py                  patients_example1.json → OMOP person + location
     ├── run.py                        boots the real OHDSI gaiaDB container,
@@ -57,6 +64,7 @@ examples/heat/
 just degauss         # geocode + Daymet Tmax at each patient's address
 just amadeus         # GridMET Tmmx at each patient's coordinates
 just omop            # assemble both into OMOP rows
+just chel            # CHEL extreme heat days, point vs county → hexagon linkage
 just verify          # compare the two Tmax series side by side
 just all             # run all of the above in sequence
 just clean           # wipe outputs/

@@ -42,11 +42,17 @@ amadeus:
 omop:
     cd omop-gaia && uv run --script run.py ../{{INPUT}}
 
+# Link the canonical patients to CHEL 2024 extreme heat days (H3 res-3), by
+# the residence point and by the AMIA 2026 RWD workshop's county -> hexagon
+# crosswalk, and emit one EnVar sidecar per route.
+chel:
+    cd chel && uv run --script run.py
+
 # ---------------------------------------------------------- end to end
 
-# Run all three. All three are independent; each takes the same canonical
+# Run all four. All four are independent; each takes the same canonical
 # input and owns its own provenance.
-all: degauss amadeus omop verify
+all: degauss amadeus omop chel verify
 
 # Compare the per-patient-day Tmax values produced by Daymet vs GridMET.
 verify:
@@ -54,7 +60,7 @@ verify:
 
 # Wipe every system's outputs (keeps the data/ inputs).
 clean:
-    rm -rf amadeus/outputs/* degauss/outputs/* omop-gaia/outputs/*
+    rm -rf amadeus/outputs/* degauss/outputs/* omop-gaia/outputs/* chel/outputs/*
     @echo "outputs cleaned"
 
 # Show a tree view of what got produced.

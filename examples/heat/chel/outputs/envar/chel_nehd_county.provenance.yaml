@@ -1,0 +1,110 @@
+provenance_id: FXD8CS9XRZYSHKJ1BREP7VJGJB-chel-county
+variable:
+  name: E_NEHD
+  label: Annual mean number of extreme heat days, 2018-2022 (EJI 2024 via CHEL)
+  units_ucum: d
+  value_data_type: continuous_numeric
+  concept_status: gap
+  definition_source: https://atsdr.cdc.gov/place-health/php/eji/eji-indicators-climate-burden-module.html
+  companion_percentile_variable: EPL_NEHD
+spatial:
+  crs: EPSG:4326
+  native_spatial_resolution_descriptor: H3 resolution 3, about 12,000 km2 per cell
+    (CHEL Documentation.md §1.3)
+  extraction_method: area_weighted_polygon_mean
+  _extraction_method_note: 'CHEL''s tract-to-hexagon operator, inferred: Documentation.md
+    §2.6 says climate inputs use area-weighted or intersection-based aggregation depending
+    on source format, and does not say which applies to extreme heat days. The person-level
+    step is a lookup of the hexagon''s value; see linkage.'
+  target_geography_type: h3_hex
+  spatial_extent_descriptor: United States incl. Alaska, Hawaii, Puerto Rico and island
+    territories; 929 H3 res-3 cells
+exposure_model:
+  inputs:
+  - CDC National Environmental Public Health Tracking Network extreme heat days (via
+    EJI 2024)
+temporal:
+  temporal_resolution: annual
+  temporal_aggregation_method: mean
+  temporal_coverage_start: '2018-01-01'
+  temporal_coverage_end: '2022-12-31'
+  calendar: gregorian
+source_dataset:
+  name: CLAD Hex Environmental Linkage (CHEL) 2024, from CDC/ATSDR Environmental Justice
+    Index 2024
+  short_code: chel_2024
+  version: 2024 (cladteam/CHEL@4dd219e)
+  producer_institution: Center for Linkage and Acquisition of Data (CLAD)
+  license_spdx: NOASSERTION
+  access_url: https://raw.githubusercontent.com/cladteam/CHEL/4dd219e256ba664a9151d4d8d7aefac65ef2ce28/data/CHEL_hex3_2024.csv
+  native_format: CSV
+linkage:
+  strategy: county_assigned_h3_hexagon
+  geocoding_precision_propagated: range
+  geocoding_score_propagated: 0.92
+  address_period_alignment: single_static_address
+  path: residence point -> county FIPS (FCC Census Area API, 2020 blocks) -> one H3
+    res-3 hexagon per county (workshop crosswalk) -> CHEL h3_id
+  effective_spatial_resolution: county
+  join_key: h3_id
+  match:
+    persons: 3
+    persons_with_hexagon: 3
+    persons_with_value: 3
+  assignment_rule: 'undocumented: the workshop repo does not say how each county''s
+    one hexagon was chosen'
+  crosswalk:
+    url: https://raw.githubusercontent.com/rwdcollaborative/amia-2026-rwd-workshop/cf3a05c61c88b3724f33d5bcef04d8a5c1923cc8/staging/data/h3res3_countyfips_cw.csv
+    commit: cf3a05c61c88b3724f33d5bcef04d8a5c1923cc8
+    sha256: 15c196326cedca63aaff213a0282090b2bdfcd04fec16ca4abae1e03354f8dda
+    counties: 3232
+null_semantics:
+  '-999': no data for this hexagon; mapped to NULL. CHEL Documentation.md §4.3.3 distinguishes
+    structural nulls, derived nulls and true zeros but does not say which one -999
+    encodes
+temporal_alignment:
+  exposure_window: 2018-01-01..2022-12-31
+  observation_windows:
+  - 2018-05-01..2022-09-30
+  - 2020-01-15..2022-09-30
+  release_selection: 'CHEL 2024 chosen per variable: E_NEHD exists only in the 2024
+    release. The CHEL README''s enrollment-year rule would route persons enrolled
+    2015-2018 to CHEL 2022, which has no extreme heat days'
+  persons_without_value_under_readme_rule:
+  - '91204'
+  - '91205'
+tool_run:
+  tool_name: envar-chel-linkage
+  tool_version: 0.1.0
+  execution_mode: real_upstream_files_real_fcc_api
+  run_timestamp_utc: '2026-11-04T09:32:52Z'
+  input_file: data/patients_example1.json
+  input_file_sha256: 0c935120da3a4ded3bbfb9b70cb7dbe65f545b7c1aec388855c5aae378dae2cd
+  input_row_count: 3
+  output_file: outputs/chel_nehd_county.csv
+  output_file_sha256: 05228abb906903fdcc62c0ff85ff21099388d9cfb0c840bafce106270229f9c1
+  output_row_count: 3
+  run_arguments: route=county variable=E_NEHD h3_resolution=3
+  inputs:
+    chel:
+      url: https://raw.githubusercontent.com/cladteam/CHEL/4dd219e256ba664a9151d4d8d7aefac65ef2ce28/data/CHEL_hex3_2024.csv
+      commit: 4dd219e256ba664a9151d4d8d7aefac65ef2ce28
+      sha256: 40c9c20a00d5afcd73d91559752c8d6051d6faeec8318477dd0a9f489819fc1c
+      hexagons: 929
+    workshop_crosswalk:
+      url: https://raw.githubusercontent.com/rwdcollaborative/amia-2026-rwd-workshop/cf3a05c61c88b3724f33d5bcef04d8a5c1923cc8/staging/data/h3res3_countyfips_cw.csv
+      commit: cf3a05c61c88b3724f33d5bcef04d8a5c1923cc8
+      sha256: 15c196326cedca63aaff213a0282090b2bdfcd04fec16ca4abae1e03354f8dda
+      counties: 3232
+    county_lookup:
+      service: https://geo.fcc.gov/api/census/area
+      census_year: '2020'
+provenance_chain:
+- step: chel_release
+  tool_run:
+    tool_name: CHEL (CLAD Foundry pipeline)
+    tool_version: 2024 release, cladteam/CHEL@4dd219e
+- step: workshop_county_hexagon_crosswalk
+  tool_run:
+    tool_name: amia-2026-rwd-workshop staging/augment.py build_location()
+    tool_version: rwdcollaborative/amia-2026-rwd-workshop@cf3a05c

@@ -1,0 +1,7 @@
+person_id,location_id,exposure_concept_id,exposure_start_date,exposure_end_date,value_as_number,unit_concept_id,exposure_type_concept_id,exposure_source_value,exposure_source_concept_id
+91204,91204,proposed:annual-mean-extreme-heat-days,2018-01-01,2022-12-31,17.1544,8512,32885,C4C4M5WG6YW8Z61CZ2X2CRE2NE-chel-point,0
+91204,91204,proposed:annual-mean-extreme-heat-days,2018-01-01,2022-12-31,15.6138,8512,32885,FXD8CS9XRZYSHKJ1BREP7VJGJB-chel-county,0
+91205,91205,proposed:annual-mean-extreme-heat-days,2018-01-01,2022-12-31,17.1544,8512,32885,C4C4M5WG6YW8Z61CZ2X2CRE2NE-chel-point,0
+91205,91205,proposed:annual-mean-extreme-heat-days,2018-01-01,2022-12-31,15.6138,8512,32885,FXD8CS9XRZYSHKJ1BREP7VJGJB-chel-county,0
+91206,91206,proposed:annual-mean-extreme-heat-days,2018-01-01,2022-12-31,15.4089,8512,32885,C4C4M5WG6YW8Z61CZ2X2CRE2NE-chel-point,0
+91206,91206,proposed:annual-mean-extreme-heat-days,2018-01-01,2022-12-31,15.4089,8512,32885,FXD8CS9XRZYSHKJ1BREP7VJGJB-chel-county,0

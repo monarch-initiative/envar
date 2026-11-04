@@ -1,0 +1,4 @@
+person_id,route,county_fips,county_name,h3_id,chel_hex_id,value,percentile,same_hexagon_both_routes,observation_start,observation_end,chel_readme_release
+91204,county,04013,Maricopa County,8348e9fffffffff,521,15.6138,0.5909,False,2018-05-01,2022-09-30,2022
+91205,county,04013,Maricopa County,8348e9fffffffff,521,15.6138,0.5909,False,2018-05-01,2022-09-30,2022
+91206,county,04019,Pima County,8348e8fffffffff,637,15.4089,0.5678,True,2020-01-15,2022-09-30,2024

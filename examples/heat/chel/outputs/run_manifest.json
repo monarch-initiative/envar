@@ -1,0 +1,65 @@
+{
+  "built_at": "2026-11-04T09:32:52Z",
+  "tool": {
+    "name": "envar-chel-linkage",
+    "version": "0.1.0"
+  },
+  "parameters": {
+    "variable": "E_NEHD",
+    "h3_resolution": 3,
+    "chel_release": "2024",
+    "routes": [
+      "point",
+      "county"
+    ]
+  },
+  "inputs": {
+    "chel": {
+      "url": "https://raw.githubusercontent.com/cladteam/CHEL/4dd219e256ba664a9151d4d8d7aefac65ef2ce28/data/CHEL_hex3_2024.csv",
+      "commit": "4dd219e256ba664a9151d4d8d7aefac65ef2ce28",
+      "sha256": "40c9c20a00d5afcd73d91559752c8d6051d6faeec8318477dd0a9f489819fc1c",
+      "hexagons": 929
+    },
+    "workshop_crosswalk": {
+      "url": "https://raw.githubusercontent.com/rwdcollaborative/amia-2026-rwd-workshop/cf3a05c61c88b3724f33d5bcef04d8a5c1923cc8/staging/data/h3res3_countyfips_cw.csv",
+      "commit": "cf3a05c61c88b3724f33d5bcef04d8a5c1923cc8",
+      "sha256": "15c196326cedca63aaff213a0282090b2bdfcd04fec16ca4abae1e03354f8dda",
+      "counties": 3232
+    },
+    "county_lookup": {
+      "service": "https://geo.fcc.gov/api/census/area",
+      "census_year": "2020"
+    },
+    "patients": {
+      "path": "data/patients_example1.json",
+      "sha256": "0c935120da3a4ded3bbfb9b70cb7dbe65f545b7c1aec388855c5aae378dae2cd"
+    }
+  },
+  "counts": {
+    "point": {
+      "persons": 3,
+      "persons_with_hexagon": 3,
+      "persons_with_value": 3
+    },
+    "county": {
+      "persons": 3,
+      "persons_with_hexagon": 3,
+      "persons_with_value": 3
+    }
+  },
+  "persons_in_a_different_hexagon_by_route": [
+    "91204",
+    "91205"
+  ],
+  "outputs": {
+    "data": {
+      "point": "outputs/chel_nehd_point.csv",
+      "county": "outputs/chel_nehd_county.csv"
+    },
+    "external_exposure": "outputs/external_exposure.csv",
+    "sidecars": {
+      "C4C4M5WG6YW8Z61CZ2X2CRE2NE-chel-point": "outputs/envar/chel_nehd_point.provenance.yaml",
+      "FXD8CS9XRZYSHKJ1BREP7VJGJB-chel-county": "outputs/envar/chel_nehd_county.provenance.yaml"
+    }
+  }
+}

@@ -3,6 +3,7 @@ site/
 .env
 examples/heat/degauss/_cache/
 examples/heat/degauss/_docker_workdir/
+examples/heat/chel/.cache/
 CLAUDE.local.md
 examples/heat/omop-gaia/linkml/inputs/
 examples/heat/omop-gaia/linkml/out/
